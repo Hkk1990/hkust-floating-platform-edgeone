@@ -119,6 +119,10 @@
   }
 
   function start() {
+    document.querySelectorAll('[data-reveal]').forEach(element => {
+      element.classList.add('is-visible');
+    });
+
     window.setTimeout(boot, 650);
     window.addEventListener('load', () => window.setTimeout(boot, 150), { once: true });
 
