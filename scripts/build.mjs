@@ -24,17 +24,24 @@ for (const entry of readdirSync(root, { withFileTypes: true })) {
   });
 }
 
-const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260809-3"/>';
-const extraBody = '<script src="./mobility-control.js?v=20260809-3" defer></script>';
+const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260809-4"/>';
+const extraBody = '<script src="./mobility-control.js?v=20260809-4" defer></script>';
 
 for (const htmlName of ["index.html", "404.html"]) {
   const htmlPath = resolve(output, htmlName);
   const html = readFileSync(htmlPath, "utf8")
     .replace(/<link rel="preload" as="image"[^>]*\/>/g, "")
-    .replaceAll("<img ", '<img loading="lazy" decoding="async" ')
     .replace("</head>", `${extraHead}</head>`)
     .replace("</body>", `${extraBody}</body>`);
   writeFileSync(htmlPath, html, "utf8");
 }
+
+const pageBundlePath = resolve(output, "_next/static/chunks/page-BsArb3My.js");
+const autoToggleEffect = '(0,r.useEffect)(()=>{let e=window.setInterval(()=>t(e=>!e),7600);return()=>window.clearInterval(e)},[])';
+const pageBundle = readFileSync(pageBundlePath, "utf8");
+if (!pageBundle.includes(autoToggleEffect)) {
+  throw new Error("Expected mobility auto-toggle effect was not found.");
+}
+writeFileSync(pageBundlePath, pageBundle.replace(autoToggleEffect, ""), "utf8");
 
 console.log("EdgeOne static output generated in dist/");

@@ -1,10 +1,15 @@
 (() => {
   const MOBILE_QUERY = '(max-width: 680px)';
+  let activeStage = null;
+  let activeRender = null;
 
   function installManualControl() {
     const stage = document.querySelector('.mobility-stage');
     if (!stage) return false;
-    if (stage.dataset.manualReady === 'true' && stage.querySelector('.mobility-slider')) return true;
+    if (stage.dataset.manualReady === 'true' && stage.querySelector('.mobility-slider')) {
+      if (activeStage === stage && activeRender) activeRender();
+      return true;
+    }
     if (stage.dataset.manualReady === 'true') delete stage.dataset.manualReady;
 
     const switchHost = stage.querySelector('.mode-switch');
@@ -37,6 +42,10 @@
     let pendingValue = 0;
     let frame = 0;
 
+    function setText(element, text) {
+      if (element && element.textContent !== text) element.textContent = text;
+    }
+
     function setChainTransform(element, width, startScale, endScale, startAngle, endAngle, progress) {
       if (!element) return;
       const scale = startScale + (endScale - startScale) * progress;
@@ -49,6 +58,7 @@
       const value = Math.max(0, Math.min(100, Number(rawValue) || 0));
       const progress = value / 100;
       const isMobile = mobileMedia.matches;
+      stage.classList.remove('is-flood');
 
       // Desktop target: 23% / 74%. Mobile target: 24% / 71%, leaving the complete model visible.
       const deltaX = (isMobile ? -34 : -27) * progress;
@@ -61,7 +71,7 @@
       stage.style.setProperty('--detach-opacity', String(Math.max(0, (progress - 0.55) / 0.45).toFixed(3)));
       slider.style.setProperty('--slider-fill', `${value}%`);
       slider.setAttribute('aria-valuetext', value === 0 ? '常态泊位' : value === 100 ? '行洪临时锚位' : `已移动百分之${value}`);
-      valueLabel.textContent = `${value}%`;
+      setText(valueLabel, `${value}%`);
 
       if (isMobile) {
         setChainTransform(chains.left, '55%', 1, 0.80, 12, 62, progress);
@@ -74,14 +84,14 @@
       }
 
       if (value === 0) {
-        if (status) status.textContent = '常态运营';
-        if (readout) readout.textContent = '引桥连接 · 稳定系泊';
+        setText(status, '常态运营');
+        setText(readout, '引桥连接 · 稳定系泊');
       } else if (value === 100) {
-        if (status) status.textContent = '行洪避让';
-        if (readout) readout.textContent = '临时锚位 · 3条锚链受力';
+        setText(status, '行洪避让');
+        setText(readout, '临时锚位 · 3条锚链受力');
       } else {
-        if (status) status.textContent = '人工拖移中';
-        if (readout) readout.textContent = `整体浮体移动 ${value}%`;
+        setText(status, '人工拖移中');
+        setText(readout, `整体浮体移动 ${value}%`);
       }
     }
 
@@ -97,6 +107,8 @@
     slider.addEventListener('input', event => scheduleRender(event.currentTarget.value), { passive: true });
     slider.addEventListener('change', event => render(event.currentTarget.value));
     mobileMedia.addEventListener?.('change', () => render(slider.value));
+    activeStage = stage;
+    activeRender = () => render(slider.value);
     render(0);
     return true;
   }
@@ -116,11 +128,12 @@
       window.clearTimeout(recoveryTimer);
       recoveryTimer = window.setTimeout(() => {
         const stage = document.querySelector('.mobility-stage');
-        if (stage && !stage.querySelector('.mobility-slider')) installManualControl();
+        if (!stage) return;
+        if (!stage.querySelector('.mobility-slider')) installManualControl();
+        else if (activeStage === stage && activeRender) activeRender();
       }, 80);
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    window.setTimeout(() => observer.disconnect(), 12000);
   }
 
   if (document.readyState === 'loading') {

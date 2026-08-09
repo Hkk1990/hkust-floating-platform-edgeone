@@ -1,4 +1,9 @@
 /* Lightweight manual control for the floating-platform relocation diagram. */
+.mobility .mobility-stage {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 .mobility-stage[data-manual-ready="true"] {
   --move-x: 0cqw;
   --move-y: 0cqw;
