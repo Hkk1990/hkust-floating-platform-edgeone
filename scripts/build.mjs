@@ -40,10 +40,11 @@ for (const htmlName of ["index.html", "404.html"]) {
 
 const pageBundlePath = resolve(output, "_next/static/chunks/page-BsArb3My.js");
 const autoToggleEffect = '(0,r.useEffect)(()=>{let e=window.setInterval(()=>t(e=>!e),7600);return()=>window.clearInterval(e)},[])';
+const disabledAutoToggleEffect = '(0,r.useEffect)(()=>{},[])';
 const pageBundle = readFileSync(pageBundlePath, "utf8");
 if (!pageBundle.includes(autoToggleEffect)) {
   throw new Error("Expected mobility auto-toggle effect was not found.");
 }
-writeFileSync(pageBundlePath, pageBundle.replace(autoToggleEffect, ""), "utf8");
+writeFileSync(pageBundlePath, pageBundle.replace(autoToggleEffect, disabledAutoToggleEffect), "utf8");
 
 console.log("EdgeOne static output generated in dist/");
