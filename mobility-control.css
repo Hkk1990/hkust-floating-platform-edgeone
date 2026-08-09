@@ -1,0 +1,193 @@
+/* Lightweight manual control for the floating-platform relocation diagram. */
+.mobility-stage[data-manual-ready="true"] {
+  --move-x: 0cqw;
+  --move-y: 0cqw;
+  --bridge-angle: -10deg;
+  --bridge-shift: 0px;
+  --ghost-opacity: 0;
+  --detach-opacity: 0;
+  isolation: isolate;
+}
+
+.mobility-stage[data-manual-ready="true"] .mode-switch > button {
+  display: none !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .mode-switch {
+  width: clamp(250px, 32cqw, 390px);
+  min-width: 0;
+  padding: 7px 12px 8px;
+  display: block;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.mobility-slider-wrap {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 9px;
+  line-height: 1;
+  user-select: none;
+}
+
+.mobility-slider-wrap strong {
+  color: #a8f1ea;
+  min-width: 30px;
+  text-align: right;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mobility-slider {
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  cursor: grab;
+  touch-action: pan-y;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+.mobility-slider:active {
+  cursor: grabbing;
+}
+
+.mobility-slider:focus-visible {
+  outline: 2px solid #75ded5;
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.mobility-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #75ded5 0 var(--slider-fill, 0%), rgba(255,255,255,.18) var(--slider-fill, 0%) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.mobility-slider::-webkit-slider-thumb {
+  width: 19px;
+  height: 19px;
+  margin-top: -7px;
+  border: 3px solid #06364a;
+  border-radius: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #a8f1ea;
+  box-shadow: 0 0 0 3px rgba(117,222,213,.2), 0 4px 12px rgba(0,0,0,.35);
+}
+
+.mobility-slider::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+}
+
+.mobility-slider::-moz-range-progress {
+  height: 5px;
+  border-radius: 999px;
+  background: #75ded5;
+}
+
+.mobility-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 3px solid #06364a;
+  border-radius: 50%;
+  background: #a8f1ea;
+  box-shadow: 0 0 0 3px rgba(117,222,213,.2), 0 4px 12px rgba(0,0,0,.35);
+}
+
+/* Direct transform-only movement. This remains inside the diagram at 100%. */
+.mobility-stage[data-manual-ready="true"] .moving-complex,
+.mobility-stage[data-manual-ready="true"].is-flood .moving-complex {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate3d(calc(-50% + var(--move-x)), calc(-50% + var(--move-y)), 0) !important;
+  transition: none !important;
+  animation: none !important;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.mobility-stage[data-manual-ready="true"] .moving-complex > img {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .origin-ghost,
+.mobility-stage[data-manual-ready="true"].is-flood .origin-ghost {
+  opacity: var(--ghost-opacity) !important;
+  transition: none !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .bridge-unit,
+.mobility-stage[data-manual-ready="true"].is-flood .bridge-unit {
+  top: 53% !important;
+  left: 52.6% !important;
+  transform: rotate(var(--bridge-angle)) translateY(var(--bridge-shift)) !important;
+  transition: none !important;
+  will-change: transform;
+}
+
+.mobility-stage[data-manual-ready="true"] .detach-note,
+.mobility-stage[data-manual-ready="true"].is-flood .detach-note {
+  opacity: var(--detach-opacity) !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .anchor-chain,
+.mobility-stage[data-manual-ready="true"] .route-line i,
+.mobility-stage[data-manual-ready="true"] .water-pulse,
+.mobility-stage[data-manual-ready="true"] .moving-complex span {
+  animation: none !important;
+  transition: none !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .route-line i {
+  display: none;
+}
+
+.mobility-stage[data-manual-ready="true"] .water-pulse {
+  opacity: .28;
+  transform: scale(.72);
+}
+
+@media (max-width: 680px) {
+  .mobility-stage[data-manual-ready="true"] .mobility-hud {
+    gap: 9px;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .mode-switch {
+    width: 100%;
+    padding: 8px 10px;
+  }
+
+  .mobility-slider-wrap {
+    gap: 7px;
+    font-size: 8px;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .bridge-unit,
+  .mobility-stage[data-manual-ready="true"].is-flood .bridge-unit {
+    top: 47% !important;
+    left: 60% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .detach-note {
+    top: 65%;
+    left: 37%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobility-stage[data-manual-ready="true"] .moving-complex,
+  .mobility-stage[data-manual-ready="true"] .bridge-unit,
+  .mobility-stage[data-manual-ready="true"] .anchor-chain {
+    will-change: auto;
+  }
+}
