@@ -65,9 +65,8 @@
       const deltaY = (isMobile ? 38.7 : 16.9) * progress;
       stage.style.setProperty('--move-x', `${deltaX.toFixed(3)}cqw`);
       stage.style.setProperty('--move-y', `${deltaY.toFixed(3)}cqw`);
-      stage.style.setProperty('--bridge-angle', `${(-10 + 87 * progress).toFixed(2)}deg`);
-      stage.style.setProperty('--bridge-shift', `${(16 * progress).toFixed(2)}px`);
-      stage.style.setProperty('--ghost-opacity', String((progress * 0.88).toFixed(3)));
+      stage.style.setProperty('--bridge-angle', `${(-18 - 64 * progress).toFixed(2)}deg`);
+      stage.style.setProperty('--ghost-opacity', '0');
       stage.style.setProperty('--detach-opacity', String(Math.max(0, (progress - 0.55) / 0.45).toFixed(3)));
       slider.style.setProperty('--slider-fill', `${value}%`);
       slider.setAttribute('aria-valuetext', value === 0 ? '常态泊位' : value === 100 ? '行洪临时锚位' : `已移动百分之${value}`);

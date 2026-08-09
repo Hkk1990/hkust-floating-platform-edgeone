@@ -7,8 +7,7 @@
 .mobility-stage[data-manual-ready="true"] {
   --move-x: 0cqw;
   --move-y: 0cqw;
-  --bridge-angle: -10deg;
-  --bridge-shift: 0px;
+  --bridge-angle: -18deg;
   --ghost-opacity: 0;
   --detach-opacity: 0;
   isolation: isolate;
@@ -109,6 +108,8 @@
 /* Direct transform-only movement. This remains inside the diagram at 100%. */
 .mobility-stage[data-manual-ready="true"] .moving-complex,
 .mobility-stage[data-manual-ready="true"].is-flood .moving-complex {
+  width: 26cqw !important;
+  height: 26cqw !important;
   opacity: 1 !important;
   visibility: visible !important;
   transform: translate3d(calc(-50% + var(--move-x)), calc(-50% + var(--move-y)), 0) !important;
@@ -125,21 +126,54 @@
 
 .mobility-stage[data-manual-ready="true"] .origin-ghost,
 .mobility-stage[data-manual-ready="true"].is-flood .origin-ghost {
-  opacity: var(--ghost-opacity) !important;
-  transition: none !important;
+  display: none !important;
 }
 
 .mobility-stage[data-manual-ready="true"] .bridge-unit,
 .mobility-stage[data-manual-ready="true"].is-flood .bridge-unit {
-  top: 53% !important;
-  left: 52.6% !important;
-  transform: rotate(var(--bridge-angle)) translateY(var(--bridge-shift)) !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: 2.5% !important;
+  left: 59% !important;
+  height: 34% !important;
+  margin-left: -8.5px;
+  transform-origin: 50% 100% !important;
+  transform: rotate(var(--bridge-angle)) !important;
   transition: none !important;
   will-change: transform;
 }
 
+.mobility-stage[data-manual-ready="true"] .bridge-unit::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 13px;
+  height: 13px;
+  translate: -50% 0;
+  border: 2px solid #a8f1ea;
+  border-radius: 50%;
+  background: #07364c;
+  box-shadow: 0 0 0 5px rgba(117, 222, 213, .18);
+}
+
+.mobility-stage[data-manual-ready="true"] .bridge-unit::after {
+  content: "浮体端断开";
+  position: absolute;
+  top: -21px;
+  left: 50%;
+  translate: -50% 0;
+  color: #a8f1ea;
+  white-space: nowrap;
+  font-size: 7px;
+  letter-spacing: .08em;
+  opacity: var(--detach-opacity);
+}
+
 .mobility-stage[data-manual-ready="true"] .detach-note,
 .mobility-stage[data-manual-ready="true"].is-flood .detach-note {
+  top: 82% !important;
+  left: 46% !important;
   opacity: var(--detach-opacity) !important;
   transform: none !important;
   transition: none !important;
@@ -179,13 +213,22 @@
 
   .mobility-stage[data-manual-ready="true"] .bridge-unit,
   .mobility-stage[data-manual-ready="true"].is-flood .bridge-unit {
-    top: 47% !important;
-    left: 60% !important;
+    top: auto !important;
+    bottom: 1.5% !important;
+    left: 72% !important;
+    height: 32% !important;
+    margin-left: -6px;
   }
 
   .mobility-stage[data-manual-ready="true"] .detach-note {
-    top: 65%;
-    left: 37%;
+    top: 83% !important;
+    left: 37% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .moving-complex,
+  .mobility-stage[data-manual-ready="true"].is-flood .moving-complex {
+    width: 44cqw !important;
+    height: 44cqw !important;
   }
 }
 
