@@ -16,6 +16,12 @@
     const status = stage.querySelector('.hud-status strong');
     const readout = stage.querySelector('.hud-readout strong');
     const model = stage.querySelector('.moving-complex');
+    const bridge = stage.querySelector('.bridge-unit');
+    const anchorPoints = {
+      left: stage.querySelector('.anchor-left'),
+      right: stage.querySelector('.anchor-right'),
+      bottom: stage.querySelector('.anchor-bottom')
+    };
     const chains = {
       left: stage.querySelector('.chain-left'),
       right: stage.querySelector('.chain-right'),
@@ -46,18 +52,29 @@
       if (element && element.textContent !== text) element.textContent = text;
     }
 
-    function setChainTransform(element, width, startScale, endScale, startAngle, endAngle, progress) {
-      if (!element) return;
-      const scale = startScale + (endScale - startScale) * progress;
-      const angle = startAngle + (endAngle - startAngle) * progress;
-      element.style.width = width;
-      element.style.transform = `rotate(${angle.toFixed(2)}deg) scaleX(${scale.toFixed(3)})`;
+    function connectChain(element, anchor, targetX, targetY, stageRect) {
+      if (!element || !anchor) return;
+      const anchorRect = anchor.getBoundingClientRect();
+      const originX = anchorRect.left + anchorRect.width / 2 - stageRect.left;
+      const originY = anchorRect.top + anchorRect.height / 2 - stageRect.top;
+      const deltaX = targetX - originX;
+      const deltaY = targetY - originY;
+      element.style.left = `${originX.toFixed(2)}px`;
+      element.style.top = `${originY.toFixed(2)}px`;
+      element.style.width = `${Math.hypot(deltaX, deltaY).toFixed(2)}px`;
+      element.style.transform = `rotate(${(Math.atan2(deltaY, deltaX) * 180 / Math.PI).toFixed(2)}deg)`;
     }
 
     function render(rawValue) {
       const value = Math.max(0, Math.min(100, Number(rawValue) || 0));
       const progress = value / 100;
       const isMobile = mobileMedia.matches;
+      const stageRect = stage.getBoundingClientRect();
+      const stageWidth = stage.clientWidth;
+      const stageHeight = stage.clientHeight;
+      const modelSize = stageWidth * (isMobile ? 0.44 : 0.26);
+      const centerX = stageWidth * (isMobile ? 0.58 : 0.50) + stageWidth * (isMobile ? -0.34 : -0.27) * progress;
+      const centerY = stageHeight * (isMobile ? 0.42 : 0.44) + stageWidth * (isMobile ? 0.387 : 0.169) * progress;
       stage.classList.remove('is-flood');
 
       // Desktop target: 23% / 74%. Mobile target: 24% / 71%, leaving the complete model visible.
@@ -65,21 +82,29 @@
       const deltaY = (isMobile ? 38.7 : 16.9) * progress;
       stage.style.setProperty('--move-x', `${deltaX.toFixed(3)}cqw`);
       stage.style.setProperty('--move-y', `${deltaY.toFixed(3)}cqw`);
-      stage.style.setProperty('--bridge-angle', `${(-18 - 64 * progress).toFixed(2)}deg`);
       stage.style.setProperty('--ghost-opacity', '0');
       stage.style.setProperty('--detach-opacity', String(Math.max(0, (progress - 0.55) / 0.45).toFixed(3)));
       slider.style.setProperty('--slider-fill', `${value}%`);
       slider.setAttribute('aria-valuetext', value === 0 ? '常态泊位' : value === 100 ? '行洪临时锚位' : `已移动百分之${value}`);
       setText(valueLabel, `${value}%`);
 
-      if (isMobile) {
-        setChainTransform(chains.left, '55%', 1, 0.80, 12, 62, progress);
-        setChainTransform(chains.right, '88%', 0.432, 1, 162, 151, progress);
-        setChainTransform(chains.bottom, '55%', 1, 0.873, -92, -151, progress);
-      } else {
-        setChainTransform(chains.left, '40%', 1, 0.70, 12, 65, progress);
-        setChainTransform(chains.right, '68%', 0.529, 1, 163, 156, progress);
-        setChainTransform(chains.bottom, '33%', 0.909, 1, -96, -158, progress);
+      connectChain(chains.left, anchorPoints.left, centerX - modelSize * 0.43, centerY - modelSize * 0.12, stageRect);
+      connectChain(chains.right, anchorPoints.right, centerX + modelSize * 0.43, centerY - modelSize * 0.13, stageRect);
+      connectChain(chains.bottom, anchorPoints.bottom, centerX + modelSize * 0.02, centerY + modelSize * 0.43, stageRect);
+
+      if (bridge) {
+        const pivotX = stageWidth * (isMobile ? 0.72 : 0.59);
+        const pivotY = stageHeight * (isMobile ? 0.985 : 0.975);
+        const jointX = stageWidth * (isMobile ? 0.58 : 0.50) + modelSize * 0.04;
+        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.43;
+        const bridgeDeltaX = jointX - pivotX;
+        const bridgeDeltaY = jointY - pivotY;
+        const bridgeLength = Math.hypot(bridgeDeltaX, bridgeDeltaY);
+        const connectedAngle = Math.atan2(bridgeDeltaX, -bridgeDeltaY) * 180 / Math.PI;
+        const bridgeProgress = 1 - Math.pow(1 - progress, 1.65);
+        const bridgeAngle = connectedAngle - (isMobile ? 68 : 62) * bridgeProgress;
+        bridge.style.setProperty('height', `${bridgeLength.toFixed(2)}px`, 'important');
+        stage.style.setProperty('--bridge-angle', `${bridgeAngle.toFixed(2)}deg`);
       }
 
       if (value === 0) {

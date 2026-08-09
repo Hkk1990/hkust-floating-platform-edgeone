@@ -110,6 +110,10 @@
 .mobility-stage[data-manual-ready="true"].is-flood .moving-complex {
   width: 26cqw !important;
   height: 26cqw !important;
+  clip-path: polygon(42% 8%, 70% 9%, 88% 23%, 94% 52%, 81% 84%, 56% 93%, 51% 90%, 31% 88%, 12% 72%, 7% 49%, 10% 29%, 28% 12%) !important;
+  background: none !important;
+  box-shadow: none !important;
+  filter: none !important;
   opacity: 1 !important;
   visibility: visible !important;
   transform: translate3d(calc(-50% + var(--move-x)), calc(-50% + var(--move-y)), 0) !important;
@@ -122,6 +126,11 @@
 .mobility-stage[data-manual-ready="true"] .moving-complex > img {
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .moving-complex::before,
+.mobility-stage[data-manual-ready="true"] .moving-complex span {
+  display: none !important;
 }
 
 .mobility-stage[data-manual-ready="true"] .origin-ghost,
@@ -187,6 +196,21 @@
   transition: none !important;
 }
 
+.mobility-stage[data-manual-ready="true"] .anchor-left {
+  top: 26% !important;
+  left: 9% !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .anchor-right {
+  top: 22% !important;
+  left: 88% !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .anchor-bottom {
+  top: 96% !important;
+  left: 59% !important;
+}
+
 .mobility-stage[data-manual-ready="true"] .route-line i {
   display: none;
 }
@@ -229,6 +253,21 @@
   .mobility-stage[data-manual-ready="true"].is-flood .moving-complex {
     width: 44cqw !important;
     height: 44cqw !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .anchor-left {
+    top: 20% !important;
+    left: 3% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .anchor-right {
+    top: 19% !important;
+    left: 97% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .anchor-bottom {
+    top: 96% !important;
+    left: 61% !important;
   }
 }
 
