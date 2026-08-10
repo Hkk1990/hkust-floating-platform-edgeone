@@ -27,13 +27,45 @@
 
 .mobility-slider-wrap {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 10px;
   color: rgba(255, 255, 255, 0.72);
   font-size: 9px;
   line-height: 1;
   user-select: none;
+}
+
+.mobility-auto-button {
+  min-height: 29px;
+  padding: 0 11px;
+  color: #07364c;
+  background: #75ded5;
+  border: 1px solid rgba(184, 255, 249, .8);
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, .24);
+  transition: transform .2s ease, background .2s ease, opacity .2s ease;
+}
+
+.mobility-auto-button:hover {
+  background: #a8f1ea;
+  transform: translateY(-1px);
+}
+
+.mobility-auto-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.mobility-auto-button:disabled {
+  opacity: .74;
+  cursor: wait;
+  transform: none;
 }
 
 .mobility-slider-wrap strong {
@@ -261,8 +293,47 @@
 }
 
 @media (max-width: 680px) {
+  .topbar {
+    gap: 6px !important;
+    padding: 7px 8px !important;
+  }
+
+  .topbar nav {
+    min-width: 0;
+    flex: 1;
+    display: flex !important;
+    justify-content: center;
+    gap: clamp(4px, 1.4vw, 8px) !important;
+    overflow: hidden;
+  }
+
+  .topbar nav a {
+    flex: 0 0 auto;
+    font-size: clamp(7px, 2.1vw, 9px);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .topbar-status {
+    gap: 4px !important;
+    font-size: 8px !important;
+    white-space: nowrap;
+  }
+
+  .mobility-stage[data-manual-ready="true"] {
+    overflow: visible;
+  }
+
+  .mobility-stage[data-manual-ready="true"] > img,
+  .mobility-stage[data-manual-ready="true"] .mobility-shade {
+    border-radius: 24px;
+  }
+
   .mobility-stage[data-manual-ready="true"] .mobility-hud {
     gap: 9px;
+    top: -42px !important;
+    left: 8px !important;
+    right: 8px !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .mode-switch {
@@ -271,8 +342,15 @@
   }
 
   .mobility-slider-wrap {
-    gap: 7px;
-    font-size: 8px;
+    grid-template-columns: auto minmax(48px, 1fr) auto auto;
+    gap: 5px;
+    font-size: 7px;
+  }
+
+  .mobility-auto-button {
+    min-height: 27px;
+    padding: 0 7px;
+    font-size: 7px;
   }
 
   .mobility-stage[data-manual-ready="true"] .bridge-unit,

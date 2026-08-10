@@ -3,6 +3,19 @@
   let activeStage = null;
   let activeRender = null;
 
+  function installNavigation() {
+    const nav = document.querySelector('.topbar nav');
+    const interiors = document.querySelector('.interiors');
+    if (!nav || !interiors) return;
+    interiors.id = 'interiors';
+    if (!nav.querySelector('a[href="#interiors"]')) {
+      const link = document.createElement('a');
+      link.href = '#interiors';
+      link.textContent = '空间体验';
+      nav.appendChild(link);
+    }
+  }
+
   function installManualControl() {
     const stage = document.querySelector('.mobility-stage');
     if (!stage) return false;
@@ -33,20 +46,23 @@
     stage.classList.remove('is-flood');
     switchHost.setAttribute('aria-label', '手动拖动浮体位置');
 
-    const control = document.createElement('label');
+    const control = document.createElement('div');
     control.className = 'mobility-slider-wrap';
     control.innerHTML = [
       '<span>常态泊位</span>',
       '<input class="mobility-slider" type="range" min="0" max="100" value="0" step="1" aria-label="拖动整个浮体至行洪临时锚位">',
-      '<strong aria-hidden="true">0%</strong>'
+      '<strong aria-hidden="true">0%</strong>',
+      '<button class="mobility-auto-button" type="button">点击拖动浮体</button>'
     ].join('');
     switchHost.appendChild(control);
 
     const slider = control.querySelector('.mobility-slider');
     const valueLabel = control.querySelector('strong');
+    const autoButton = control.querySelector('.mobility-auto-button');
     const mobileMedia = window.matchMedia(MOBILE_QUERY);
     let pendingValue = 0;
     let frame = 0;
+    let autoFrame = 0;
 
     function setText(element, text) {
       if (element && element.textContent !== text) element.textContent = text;
@@ -132,8 +148,48 @@
       });
     }
 
-    slider.addEventListener('input', event => scheduleRender(event.currentTarget.value), { passive: true });
-    slider.addEventListener('change', event => render(event.currentTarget.value));
+    function stopAuto() {
+      if (autoFrame) window.cancelAnimationFrame(autoFrame);
+      autoFrame = 0;
+      autoButton.disabled = false;
+      autoButton.textContent = '点击拖动浮体';
+    }
+
+    function startAuto() {
+      stopAuto();
+      slider.value = '0';
+      render(0);
+      autoButton.disabled = true;
+      autoButton.textContent = '浮体拖动中…';
+      const startedAt = performance.now();
+      let lastPaint = 0;
+
+      function advance(now) {
+        const elapsed = Math.min(5000, now - startedAt);
+        if (elapsed === 5000 || now - lastPaint >= 32) {
+          const linear = elapsed / 5000;
+          const eased = linear * linear * (3 - 2 * linear);
+          const value = Math.round(eased * 100);
+          slider.value = String(value);
+          render(value);
+          lastPaint = now;
+        }
+        if (elapsed < 5000) autoFrame = window.requestAnimationFrame(advance);
+        else stopAuto();
+      }
+
+      autoFrame = window.requestAnimationFrame(advance);
+    }
+
+    slider.addEventListener('input', event => {
+      stopAuto();
+      scheduleRender(event.currentTarget.value);
+    }, { passive: true });
+    slider.addEventListener('change', event => {
+      stopAuto();
+      render(event.currentTarget.value);
+    });
+    autoButton.addEventListener('click', startAuto);
     mobileMedia.addEventListener?.('change', () => render(slider.value));
     activeStage = stage;
     activeRender = () => render(slider.value);
@@ -147,6 +203,7 @@
   }
 
   function start() {
+    installNavigation();
     document.querySelectorAll('[data-reveal]').forEach(element => {
       element.classList.add('is-visible');
     });
