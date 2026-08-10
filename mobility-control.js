@@ -88,9 +88,11 @@
       slider.setAttribute('aria-valuetext', value === 0 ? '常态泊位' : value === 100 ? '行洪临时锚位' : `已移动百分之${value}`);
       setText(valueLabel, `${value}%`);
 
-      connectChain(chains.left, anchorPoints.left, centerX - modelSize * 0.43, centerY - modelSize * 0.12, stageRect);
-      connectChain(chains.right, anchorPoints.right, centerX + modelSize * 0.43, centerY - modelSize * 0.13, stageRect);
-      connectChain(chains.bottom, anchorPoints.bottom, centerX - modelSize * 0.08, centerY + modelSize * 0.36, stageRect);
+      // The transparent source has padding around the rendered body. Target the
+      // visible octagon perimeter rather than the image box so every chain meets it.
+      connectChain(chains.left, anchorPoints.left, centerX - modelSize * 0.345, centerY - modelSize * 0.12, stageRect);
+      connectChain(chains.right, anchorPoints.right, centerX + modelSize * 0.365, centerY - modelSize * 0.13, stageRect);
+      connectChain(chains.bottom, anchorPoints.bottom, centerX - modelSize * 0.08, centerY + modelSize * 0.405, stageRect);
 
       if (bridge) {
         const pivotX = stageWidth * (isMobile ? 0.72 : 0.59);
@@ -98,7 +100,7 @@
         // Meet the float perimeter itself. The complete entrance neck belongs to
         // the bridge, so separation starts exactly at the floating body's edge.
         const jointX = stageWidth * (isMobile ? 0.58 : 0.50) + modelSize * 0.14;
-        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.37;
+        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.39;
         const bridgeDeltaX = jointX - pivotX;
         const bridgeDeltaY = jointY - pivotY;
         const bridgeLength = Math.hypot(bridgeDeltaX, bridgeDeltaY);
