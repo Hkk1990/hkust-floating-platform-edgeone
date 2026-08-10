@@ -95,8 +95,10 @@
       if (bridge) {
         const pivotX = stageWidth * (isMobile ? 0.72 : 0.59);
         const pivotY = stageHeight * (isMobile ? 0.985 : 0.975);
-        const jointX = stageWidth * (isMobile ? 0.58 : 0.50) + modelSize * 0.18;
-        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.37;
+        // Meet the centre of the original float's entrance edge. The shore pivot
+        // then determines an initial bridge axis perpendicular to that edge.
+        const jointX = stageWidth * (isMobile ? 0.58 : 0.50) + modelSize * 0.16;
+        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.47;
         const bridgeDeltaX = jointX - pivotX;
         const bridgeDeltaY = jointY - pivotY;
         const bridgeLength = Math.hypot(bridgeDeltaX, bridgeDeltaY);

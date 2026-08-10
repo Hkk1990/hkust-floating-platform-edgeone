@@ -110,7 +110,7 @@
 .mobility-stage[data-manual-ready="true"].is-flood .moving-complex {
   width: 26cqw !important;
   height: 26cqw !important;
-  clip-path: polygon(42% 8%, 70% 9%, 88% 23%, 94% 52%, 81% 84%, 56% 93%, 51% 90%, 31% 88%, 12% 72%, 7% 49%, 10% 29%, 28% 12%) !important;
+  clip-path: none !important;
   background: none !important;
   box-shadow: none !important;
   filter: none !important;
@@ -247,8 +247,8 @@
 }
 
 .mobility-stage[data-manual-ready="true"] .anchor-bottom {
-  top: 96% !important;
-  left: 36% !important;
+  top: 97.5% !important;
+  left: 42% !important;
 }
 
 .mobility-stage[data-manual-ready="true"] .route-line i {
@@ -306,8 +306,8 @@
   }
 
   .mobility-stage[data-manual-ready="true"] .anchor-bottom {
-    top: 96% !important;
-    left: 28% !important;
+    top: 97.5% !important;
+    left: 35% !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .anchor-point {
