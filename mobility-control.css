@@ -201,6 +201,46 @@
   left: 9% !important;
 }
 
+.mobility-stage[data-manual-ready="true"] .anchor-point {
+  z-index: 5 !important;
+  width: 26px !important;
+  height: 22px !important;
+  margin: -11px -13px !important;
+  border: 1px solid rgba(255, 255, 255, .55) !important;
+  border-radius: 2px !important;
+  clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%) !important;
+  background: repeating-linear-gradient(135deg, #d0d0c8 0 4px, #b5b5ad 4px 7px) !important;
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.28), 0 4px 9px rgba(0,0,0,.38) !important;
+}
+
+.mobility-stage[data-manual-ready="true"] .anchor-point::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 8px;
+  height: 7px;
+  translate: -50% 0;
+  border: 2px solid #45545a;
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  box-shadow: 0 1px 2px rgba(0,0,0,.4);
+}
+
+.mobility-stage[data-manual-ready="true"] .anchor-point::after {
+  content: "地牛";
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  translate: -50% 0;
+  color: #dfe9e6;
+  white-space: nowrap;
+  font-size: 7px;
+  letter-spacing: .08em;
+  text-shadow: 0 1px 3px rgba(0,0,0,.8);
+}
+
 .mobility-stage[data-manual-ready="true"] .anchor-right {
   top: 22% !important;
   left: 88% !important;
@@ -208,7 +248,7 @@
 
 .mobility-stage[data-manual-ready="true"] .anchor-bottom {
   top: 96% !important;
-  left: 59% !important;
+  left: 36% !important;
 }
 
 .mobility-stage[data-manual-ready="true"] .route-line i {
@@ -267,7 +307,17 @@
 
   .mobility-stage[data-manual-ready="true"] .anchor-bottom {
     top: 96% !important;
-    left: 61% !important;
+    left: 28% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .anchor-point {
+    width: 22px !important;
+    height: 18px !important;
+    margin: -9px -11px !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .anchor-point::after {
+    top: 21px;
   }
 }
 

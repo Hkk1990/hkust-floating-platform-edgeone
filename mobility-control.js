@@ -90,19 +90,19 @@
 
       connectChain(chains.left, anchorPoints.left, centerX - modelSize * 0.43, centerY - modelSize * 0.12, stageRect);
       connectChain(chains.right, anchorPoints.right, centerX + modelSize * 0.43, centerY - modelSize * 0.13, stageRect);
-      connectChain(chains.bottom, anchorPoints.bottom, centerX + modelSize * 0.02, centerY + modelSize * 0.43, stageRect);
+      connectChain(chains.bottom, anchorPoints.bottom, centerX - modelSize * 0.08, centerY + modelSize * 0.36, stageRect);
 
       if (bridge) {
         const pivotX = stageWidth * (isMobile ? 0.72 : 0.59);
         const pivotY = stageHeight * (isMobile ? 0.985 : 0.975);
-        const jointX = stageWidth * (isMobile ? 0.58 : 0.50) + modelSize * 0.04;
-        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.43;
+        const jointX = stageWidth * (isMobile ? 0.58 : 0.50) + modelSize * 0.18;
+        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.37;
         const bridgeDeltaX = jointX - pivotX;
         const bridgeDeltaY = jointY - pivotY;
         const bridgeLength = Math.hypot(bridgeDeltaX, bridgeDeltaY);
         const connectedAngle = Math.atan2(bridgeDeltaX, -bridgeDeltaY) * 180 / Math.PI;
-        const bridgeProgress = 1 - Math.pow(1 - progress, 1.65);
-        const bridgeAngle = connectedAngle - (isMobile ? 68 : 62) * bridgeProgress;
+        const bridgeProgress = 1 - Math.pow(1 - progress, 2.4);
+        const bridgeAngle = connectedAngle - 80 * bridgeProgress;
         bridge.style.setProperty('height', `${bridgeLength.toFixed(2)}px`, 'important');
         stage.style.setProperty('--bridge-angle', `${bridgeAngle.toFixed(2)}deg`);
       }

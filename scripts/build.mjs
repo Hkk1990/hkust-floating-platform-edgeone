@@ -24,8 +24,8 @@ for (const entry of readdirSync(root, { withFileTypes: true })) {
   });
 }
 
-const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260810-9"/>';
-const extraBody = '<script src="./mobility-control.js?v=20260810-9" defer></script>';
+const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260810-13"/>';
+const extraBody = '<script src="./mobility-control.js?v=20260810-13" defer></script>';
 const intervalGuard = '<script id="mobility-interval-guard">(()=>{const original=window.setInterval;window.setInterval=function(handler,delay,...args){if(delay===7600)return 0;return original.call(window,handler,delay,...args)}})()</script>';
 
 for (const htmlName of ["index.html", "404.html"]) {
@@ -33,6 +33,7 @@ for (const htmlName of ["index.html", "404.html"]) {
   const html = readFileSync(htmlPath, "utf8")
     .replace(/<link rel="preload" as="image"[^>]*\/>/g, "")
     .replaceAll("platform-top.webp", "platform-water-only-v2.webp")
+    .replaceAll("也是一台科研仪器", "也是一座科研设施")
     .replace("<head>", `<head>${intervalGuard}`)
     .replace("</head>", `${extraHead}</head>`)
     .replace("</body>", `${extraBody}</body>`);
@@ -50,7 +51,8 @@ writeFileSync(
   pageBundlePath,
   pageBundle
     .replace(autoToggleEffect, disabledAutoToggleEffect)
-    .replaceAll("platform-top.webp", "platform-water-only-v2.webp"),
+    .replaceAll("platform-top.webp", "platform-water-only-v2.webp")
+    .replaceAll("也是一台科研仪器", "也是一座科研设施"),
   "utf8"
 );
 
