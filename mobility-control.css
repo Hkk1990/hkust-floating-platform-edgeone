@@ -292,6 +292,26 @@
   transform: scale(.72);
 }
 
+@media (min-width: 981px) {
+  .overview-copy h2 {
+    font-size: clamp(40px, 4vw, 60px);
+  }
+
+  .overview-copy h2 em,
+  .future h2 em {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .future h2 {
+    font-size: clamp(42px, 4.4vw, 60px);
+  }
+
+  .future > img {
+    object-position: center 22%;
+  }
+}
+
 @media (max-width: 680px) {
   .topbar {
     display: grid !important;
@@ -425,6 +445,7 @@
   }
 
   .mobility-stage[data-manual-ready="true"] {
+    aspect-ratio: 1.78 !important;
     overflow: visible;
   }
 
@@ -460,9 +481,9 @@
   .mobility-stage[data-manual-ready="true"] .bridge-unit,
   .mobility-stage[data-manual-ready="true"].is-flood .bridge-unit {
     top: auto !important;
-    bottom: 1.5% !important;
-    left: 72% !important;
-    height: 32% !important;
+    bottom: 2.5% !important;
+    left: 59% !important;
+    height: 34% !important;
     margin-left: -6px;
   }
 
@@ -473,23 +494,50 @@
 
   .mobility-stage[data-manual-ready="true"] .moving-complex,
   .mobility-stage[data-manual-ready="true"].is-flood .moving-complex {
-    width: 44cqw !important;
-    height: 44cqw !important;
+    width: 26cqw !important;
+    height: 26cqw !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .anchor-left {
-    top: 20% !important;
-    left: 3% !important;
+    top: 26% !important;
+    left: 9% !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .anchor-right {
-    top: 19% !important;
-    left: 97% !important;
+    top: 22% !important;
+    left: 88% !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .anchor-bottom {
     top: 97.5% !important;
-    left: 35% !important;
+    left: 42% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .route-line {
+    width: 37% !important;
+    top: 72% !important;
+    left: 24% !important;
+    transform: rotate(-27deg) !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .pulse-origin {
+    top: 44% !important;
+    left: 50% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .pulse-target {
+    top: 74% !important;
+    left: 23% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .position-origin {
+    top: 34% !important;
+    left: 56% !important;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .position-target {
+    top: 79% !important;
+    left: 7% !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .anchor-point {

@@ -25,8 +25,8 @@ for (const entry of readdirSync(root, { withFileTypes: true })) {
   });
 }
 
-const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260811-01"/>';
-const extraBody = '<script src="./mobility-control.js?v=20260811-02" defer></script><script src="./interaction-control.js?v=20260810-17" defer></script>';
+const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260811-03"/>';
+const extraBody = '<script src="./mobility-control.js?v=20260811-03" defer></script><script src="./interaction-control.js?v=20260810-17" defer></script>';
 const intervalGuard = '<script id="mobility-interval-guard">(()=>{const original=window.setInterval;window.setInterval=function(handler,delay,...args){if(delay===7600)return 0;return original.call(window,handler,delay,...args)}})()</script>';
 
 for (const htmlName of ["index.html", "404.html"]) {

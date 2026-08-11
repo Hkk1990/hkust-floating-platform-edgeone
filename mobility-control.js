@@ -94,18 +94,17 @@
     function render(rawValue) {
       const value = Math.max(0, Math.min(100, Number(rawValue) || 0));
       const progress = value / 100;
-      const isMobile = mobileMedia.matches;
       const stageRect = stage.getBoundingClientRect();
       const stageWidth = stage.clientWidth;
       const stageHeight = stage.clientHeight;
-      const modelSize = stageWidth * (isMobile ? 0.44 : 0.26);
-      const centerX = stageWidth * (isMobile ? 0.58 : 0.50) + stageWidth * (isMobile ? -0.34 : -0.27) * progress;
-      const centerY = stageHeight * (isMobile ? 0.42 : 0.44) + stageWidth * (isMobile ? 0.387 : 0.169) * progress;
+      const modelSize = stageWidth * 0.26;
+      const centerX = stageWidth * 0.50 - stageWidth * 0.27 * progress;
+      const centerY = stageHeight * 0.44 + stageWidth * 0.169 * progress;
       stage.classList.remove('is-flood');
 
-      // Desktop target: 23% / 74%. Mobile target: 24% / 71%, leaving the complete model visible.
-      const deltaX = (isMobile ? -34 : -27) * progress;
-      const deltaY = (isMobile ? 38.7 : 16.9) * progress;
+      // Both layouts now use the complete landscape diagram and identical coordinates.
+      const deltaX = -27 * progress;
+      const deltaY = 16.9 * progress;
       stage.style.setProperty('--move-x', `${deltaX.toFixed(3)}cqw`);
       stage.style.setProperty('--move-y', `${deltaY.toFixed(3)}cqw`);
       stage.style.setProperty('--ghost-opacity', '0');
@@ -121,19 +120,28 @@
       connectChain(chains.bottom, anchorPoints.bottom, centerX - modelSize * 0.08, centerY + modelSize * 0.405, stageRect);
 
       if (bridge) {
-        const pivotX = stageWidth * (isMobile ? 0.72 : 0.59);
-        const pivotY = stageHeight * (isMobile ? 0.985 : 0.975);
+        const pivotX = stageWidth * 0.59;
+        const pivotY = stageHeight * 0.975;
         // Meet the float perimeter itself. The complete entrance neck belongs to
         // the bridge, so separation starts exactly at the floating body's edge.
-        const jointX = stageWidth * (isMobile ? 0.58 : 0.50) + modelSize * 0.14;
-        const jointY = stageHeight * (isMobile ? 0.42 : 0.44) + modelSize * 0.39;
+        const jointX = stageWidth * 0.50 + modelSize * 0.14;
+        const jointY = stageHeight * 0.44 + modelSize * 0.39;
         const bridgeDeltaX = jointX - pivotX;
         const bridgeDeltaY = jointY - pivotY;
         const bridgeLength = Math.hypot(bridgeDeltaX, bridgeDeltaY);
         const connectedAngle = Math.atan2(bridgeDeltaX, -bridgeDeltaY) * 180 / Math.PI;
         const bridgeProgress = 1 - Math.pow(1 - progress, 2.4);
-        const bridgeAngle = connectedAngle - 80 * bridgeProgress;
-        bridge.style.setProperty('height', `${bridgeLength.toFixed(2)}px`, 'important');
+        // The released bridge rests along the bank. Its free end stops just above
+        // the A3 ground anchor instead of rotating past the concrete block.
+        const restingX = stageWidth * 0.42;
+        const restingY = stageHeight * 0.89;
+        const restingDeltaX = restingX - pivotX;
+        const restingDeltaY = restingY - pivotY;
+        const restingLength = Math.hypot(restingDeltaX, restingDeltaY);
+        const restingAngle = Math.atan2(restingDeltaX, -restingDeltaY) * 180 / Math.PI;
+        const renderedLength = bridgeLength + (restingLength - bridgeLength) * bridgeProgress;
+        const bridgeAngle = connectedAngle + (restingAngle - connectedAngle) * bridgeProgress;
+        bridge.style.setProperty('height', `${renderedLength.toFixed(2)}px`, 'important');
         stage.style.setProperty('--bridge-angle', `${bridgeAngle.toFixed(2)}deg`);
       }
 
