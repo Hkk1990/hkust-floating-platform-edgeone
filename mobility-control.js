@@ -1,7 +1,17 @@
 (() => {
   const MOBILE_QUERY = '(max-width: 680px)';
+  const TEXT_ARROW = '\u2197\uFE0E';
   let activeStage = null;
   let activeRender = null;
+
+  function normalizePromptArrows(root = document) {
+    root.querySelectorAll('.media-hint, .photo-caption strong, .exchange-grid small').forEach(element => {
+      const text = element.textContent;
+      if (text && text.includes('\u2197')) {
+        element.textContent = text.replace(/\u2197\uFE0F?/g, TEXT_ARROW);
+      }
+    });
+  }
 
   function installNavigation() {
     const nav = document.querySelector('.topbar nav');
@@ -204,6 +214,7 @@
 
   function start() {
     installNavigation();
+    normalizePromptArrows();
     document.querySelectorAll('[data-reveal]').forEach(element => {
       element.classList.add('is-visible');
     });
@@ -217,6 +228,7 @@
       window.clearTimeout(recoveryTimer);
       recoveryTimer = window.setTimeout(() => {
         installNavigation();
+        normalizePromptArrows();
         const stage = document.querySelector('.mobility-stage');
         if (!stage) return;
         if (!stage.querySelector('.mobility-slider')) installManualControl();

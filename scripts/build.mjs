@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const output = resolve(root, "dist");
+const textArrow = "\u2197\uFE0E";
 const excluded = new Set([
   ".git",
   ".gitignore",
@@ -25,7 +26,7 @@ for (const entry of readdirSync(root, { withFileTypes: true })) {
 }
 
 const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260811-01"/>';
-const extraBody = '<script src="./mobility-control.js?v=20260811-01" defer></script><script src="./interaction-control.js?v=20260810-17" defer></script>';
+const extraBody = '<script src="./mobility-control.js?v=20260811-02" defer></script><script src="./interaction-control.js?v=20260810-17" defer></script>';
 const intervalGuard = '<script id="mobility-interval-guard">(()=>{const original=window.setInterval;window.setInterval=function(handler,delay,...args){if(delay===7600)return 0;return original.call(window,handler,delay,...args)}})()</script>';
 
 for (const htmlName of ["index.html", "404.html"]) {
@@ -35,6 +36,7 @@ for (const htmlName of ["index.html", "404.html"]) {
     .replaceAll("platform-top.webp", "platform-water-only-v2.webp")
     .replaceAll("platform-float-unit.webp", "platform-float-unit-clean-v4.webp")
     .replaceAll("也是一台科研仪器", "也是一座科研设施")
+    .replaceAll("↗", textArrow)
     .replace("<head>", `<head>${intervalGuard}`)
     .replace("</head>", `${extraHead}</head>`)
     .replace("</body>", `${extraBody}</body>`);
@@ -54,7 +56,8 @@ writeFileSync(
     .replace(autoToggleEffect, disabledAutoToggleEffect)
     .replaceAll("platform-top.webp", "platform-water-only-v2.webp")
     .replaceAll("platform-float-unit.webp", "platform-float-unit-clean-v4.webp")
-    .replaceAll("也是一台科研仪器", "也是一座科研设施"),
+    .replaceAll("也是一台科研仪器", "也是一座科研设施")
+    .replaceAll("↗", textArrow),
   "utf8"
 );
 
