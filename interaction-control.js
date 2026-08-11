@@ -138,6 +138,7 @@
   }
 
   function openLightbox(button) {
+    if (document.querySelector('.lightbox')) return;
     const sourceImage = button.querySelector('img');
     if (!sourceImage) return;
     const file = filename(sourceImage.src);
@@ -219,7 +220,15 @@
 
   function installLightboxes() {
     document.querySelectorAll('.media-button').forEach(button => {
-      button.addEventListener('click', () => openLightbox(button));
+      if (button.dataset.lightboxFallback === 'true') return;
+      button.dataset.lightboxFallback = 'true';
+      button.addEventListener('click', () => {
+        // Let the hydrated React handler render its richer dialog first. The
+        // standalone fallback only runs when that handler is unavailable.
+        window.setTimeout(() => {
+          if (!document.querySelector('.lightbox')) openLightbox(button);
+        }, 0);
+      });
     });
   }
 

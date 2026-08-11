@@ -293,6 +293,11 @@
 }
 
 @media (min-width: 981px) {
+  .capability-card > span {
+    font-size: 28px;
+    line-height: 1;
+  }
+
   .overview-copy h2 {
     font-size: clamp(40px, 4vw, 60px);
   }
@@ -313,6 +318,11 @@
 }
 
 @media (max-width: 680px) {
+  .capability-card > span {
+    font-size: 24px;
+    line-height: 1;
+  }
+
   .topbar {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) auto;

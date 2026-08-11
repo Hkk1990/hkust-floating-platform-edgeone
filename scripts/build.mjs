@@ -25,8 +25,8 @@ for (const entry of readdirSync(root, { withFileTypes: true })) {
   });
 }
 
-const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260811-03"/>';
-const extraBody = '<script src="./mobility-control.js?v=20260811-03" defer></script><script src="./interaction-control.js?v=20260810-17" defer></script>';
+const extraHead = '<link rel="stylesheet" href="./mobility-control.css?v=20260812-01"/>';
+const extraBody = '<script src="./mobility-control.js?v=20260812-01" defer></script><script src="./interaction-control.js?v=20260812-01" defer></script>';
 const intervalGuard = '<script id="mobility-interval-guard">(()=>{const original=window.setInterval;window.setInterval=function(handler,delay,...args){if(delay===7600)return 0;return original.call(window,handler,delay,...args)}})()</script>';
 
 for (const htmlName of ["index.html", "404.html"]) {
@@ -36,6 +36,7 @@ for (const htmlName of ["index.html", "404.html"]) {
     .replaceAll("platform-top.webp", "platform-water-only-v2.webp")
     .replaceAll("platform-float-unit.webp", "platform-float-unit-clean-v4.webp")
     .replaceAll("也是一台科研仪器", "也是一座科研设施")
+    .replaceAll("避让行洪<br/><em>平台可移动", "避让行洪，<br/><em>平台可移动")
     .replaceAll("↗", textArrow)
     .replace("<head>", `<head>${intervalGuard}`)
     .replace("</head>", `${extraHead}</head>`)
@@ -57,6 +58,7 @@ writeFileSync(
     .replaceAll("platform-top.webp", "platform-water-only-v2.webp")
     .replaceAll("platform-float-unit.webp", "platform-float-unit-clean-v4.webp")
     .replaceAll("也是一台科研仪器", "也是一座科研设施")
+    .replaceAll("children:[`避让行洪`,(0,i.jsx)(`br`,{})", "children:[`避让行洪，`,(0,i.jsx)(`br`,{})")
     .replaceAll("↗", textArrow),
   "utf8"
 );
