@@ -216,6 +216,7 @@
     const observer = new MutationObserver(() => {
       window.clearTimeout(recoveryTimer);
       recoveryTimer = window.setTimeout(() => {
+        installNavigation();
         const stage = document.querySelector('.mobility-stage');
         if (!stage) return;
         if (!stage.querySelector('.mobility-slider')) installManualControl();
