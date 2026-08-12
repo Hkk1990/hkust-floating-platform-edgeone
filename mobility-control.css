@@ -7,6 +7,7 @@
 .mobility-stage[data-manual-ready="true"] {
   --move-x: 0cqw;
   --move-y: 0cqw;
+  --float-angle: 5deg;
   --bridge-angle: -18deg;
   --ghost-opacity: 0;
   --detach-opacity: 0;
@@ -148,7 +149,10 @@
   filter: none !important;
   opacity: 1 !important;
   visibility: visible !important;
-  transform: translate3d(calc(-50% + var(--move-x)), calc(-50% + var(--move-y)), 0) !important;
+  top: 44% !important;
+  left: 50% !important;
+  transform: translate3d(calc(-50% + var(--move-x)), calc(-50% + var(--move-y)), 0) rotate(var(--float-angle)) !important;
+  transform-origin: 50% 50%;
   transition: none !important;
   animation: none !important;
   backface-visibility: hidden;

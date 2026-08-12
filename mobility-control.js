@@ -91,6 +91,14 @@
       element.style.transform = `rotate(${(Math.atan2(deltaY, deltaX) * 180 / Math.PI).toFixed(2)}deg)`;
     }
 
+    function rotateOffset(centerX, centerY, offsetX, offsetY, degrees) {
+      const angle = degrees * Math.PI / 180;
+      return {
+        x: centerX + offsetX * Math.cos(angle) - offsetY * Math.sin(angle),
+        y: centerY + offsetX * Math.sin(angle) + offsetY * Math.cos(angle)
+      };
+    }
+
     function render(rawValue) {
       const value = Math.max(0, Math.min(100, Number(rawValue) || 0));
       const progress = value / 100;
@@ -100,6 +108,7 @@
       const modelSize = stageWidth * 0.26;
       const centerX = stageWidth * 0.50 - stageWidth * 0.27 * progress;
       const centerY = stageHeight * 0.44 + stageWidth * 0.169 * progress;
+      const floatAngle = 5;
       stage.classList.remove('is-flood');
 
       // Both layouts now use the complete landscape diagram and identical coordinates.
@@ -107,6 +116,7 @@
       const deltaY = 16.9 * progress;
       stage.style.setProperty('--move-x', `${deltaX.toFixed(3)}cqw`);
       stage.style.setProperty('--move-y', `${deltaY.toFixed(3)}cqw`);
+      stage.style.setProperty('--float-angle', `${floatAngle}deg`);
       stage.style.setProperty('--ghost-opacity', '0');
       stage.style.setProperty('--detach-opacity', String(Math.max(0, (progress - 0.55) / 0.45).toFixed(3)));
       slider.style.setProperty('--slider-fill', `${value}%`);
@@ -115,17 +125,21 @@
 
       // The transparent source has padding around the rendered body. Target the
       // visible octagon perimeter rather than the image box so every chain meets it.
-      connectChain(chains.left, anchorPoints.left, centerX - modelSize * 0.345, centerY - modelSize * 0.12, stageRect);
-      connectChain(chains.right, anchorPoints.right, centerX + modelSize * 0.365, centerY - modelSize * 0.13, stageRect);
-      connectChain(chains.bottom, anchorPoints.bottom, centerX - modelSize * 0.08, centerY + modelSize * 0.405, stageRect);
+      const leftJoint = rotateOffset(centerX, centerY, -modelSize * 0.345, -modelSize * 0.12, floatAngle);
+      const rightJoint = rotateOffset(centerX, centerY, modelSize * 0.365, -modelSize * 0.13, floatAngle);
+      const bottomJoint = rotateOffset(centerX, centerY, -modelSize * 0.08, modelSize * 0.405, floatAngle);
+      connectChain(chains.left, anchorPoints.left, leftJoint.x, leftJoint.y, stageRect);
+      connectChain(chains.right, anchorPoints.right, rightJoint.x, rightJoint.y, stageRect);
+      connectChain(chains.bottom, anchorPoints.bottom, bottomJoint.x, bottomJoint.y, stageRect);
 
       if (bridge) {
         const pivotX = stageWidth * 0.59;
         const pivotY = stageHeight * 0.975;
         // Meet the float perimeter itself. The complete entrance neck belongs to
         // the bridge, so separation starts exactly at the floating body's edge.
-        const jointX = stageWidth * 0.50 + modelSize * 0.14;
-        const jointY = stageHeight * 0.44 + modelSize * 0.39;
+        const entranceJoint = rotateOffset(stageWidth * 0.50, stageHeight * 0.44, modelSize * 0.14, modelSize * 0.39, floatAngle);
+        const jointX = entranceJoint.x;
+        const jointY = entranceJoint.y;
         const bridgeDeltaX = jointX - pivotX;
         const bridgeDeltaY = jointY - pivotY;
         const bridgeLength = Math.hypot(bridgeDeltaX, bridgeDeltaY);
