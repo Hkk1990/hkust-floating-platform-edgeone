@@ -1,11 +1,11 @@
 (() => {
-  const capabilityPages = [
-    'interdisciplinary-research',
-    'solar-energy',
-    'water-cycle',
-    'structural-sensing',
-    'digital-twin',
-    'teaching-display'
+  const capabilityDetails = [
+    { eyebrow: '01 / INTERDISCIPLINARY RESEARCH', title: '跨学科科研', lead: '平台面向海洋工程、能源、环境、材料、人工智能和未来人居等方向，为校内科研课题提供真实水域中的试验与验证条件。', points: ['支持机器人、海洋观测和结构监测', '支持能源、材料和水资源研究', '促进不同课题共享空间、设备与数据'], note: '代表内容：已汇集浮式结构、机器人、微电网、生态观测等多类科研项目。' },
+    { eyebrow: '02 / SOLAR & ENERGY', title: '光伏与能源', lead: '平台将光伏发电、储能、配电和用能管理结合起来，探索浮式建筑的清洁能源利用方式。', points: ['建筑表皮集成多种光伏材料', '储能系统调节发电与用电', '智慧系统监测能源运行状态'], note: '设计测算：光伏发电玻璃面积约640㎡，能源自持率约90.82%。' },
+    { eyebrow: '03 / WATER CYCLE', title: '水资源循环', lead: '平台通过雨水收集、灰水处理和中水回用，减少日常运行对外部水资源的依赖。', points: ['收集屋面雨水', '处理生活灰水', '回用于冲厕和清洁'], note: '设计工况：最高日用水量约4m³，其中约2m³可通过中水回用满足。' },
+    { eyebrow: '04 / STRUCTURAL SENSING', title: '结构感知', lead: '平台通过传感器持续监测浮体、上部建筑、锚泊系统及周边水环境的运行状态。', points: ['监测位移、姿态和振动', '监测风、水位和波浪', '对异常状态进行分级预警'], note: '科研价值：将设计计算与实际监测数据结合，为浮式结构安全研究提供依据。' },
+    { eyebrow: '05 / DIGITAL TWIN', title: '数字孪生', lead: '数字孪生把真实平台及其设备映射到数字空间，集中呈现结构、能源、水资源和环境信息。', points: ['查看平台和设备状态', '查询实时及历史数据', '支持异常分析和运维决策'], note: '展示原则：明确区分设计值、调试值和正式运行数据。' },
+    { eyebrow: '06 / TEACHING & EXHIBITION', title: '教学与展示', lead: '平台把科研试验转化为可参与、可观察、可传播的教学与科普内容。', points: ['支持跨学科课程实践', '展示科研设备和阶段成果', '面向公众开展科普交流'], note: '代表内容：机器人、光伏能源、结构监测、水资源循环和海洋生态观测。' }
   ];
 
   function enhanceNavigation() {
@@ -89,22 +89,54 @@
     if (overviewHint) overviewHint.textContent = '了解项目 ↗︎';
   }
 
-  function linkCapabilityCards() {
+  function openCapabilityDialog(card, detail, index) {
+    if (document.querySelector('.lightbox')) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox capability-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', detail.title);
+    overlay.innerHTML = `
+      <button class="lightbox-close" type="button" aria-label="关闭能力介绍">×</button>
+      <div class="lightbox-panel capability-dialog-panel">
+        <div class="capability-dialog-visual" aria-hidden="true"><span>${String(index + 1).padStart(2, '0')}</span><strong>${detail.title}</strong><i></i><i></i><i></i></div>
+        <div class="lightbox-copy capability-dialog-copy">
+          <p class="section-index">${detail.eyebrow}</p><h2>${detail.title}</h2><p>${detail.lead}</p>
+          <ul>${detail.points.map(point => `<li>${point}</li>`).join('')}</ul><aside>${detail.note}</aside>
+          <button type="button">返回页面</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+    const closeButton = overlay.querySelector('.lightbox-close');
+    const backButton = overlay.querySelector('.lightbox-copy > button');
+    const close = () => { overlay.remove(); document.body.style.overflow = ''; document.removeEventListener('keydown', onKeydown); card.focus({ preventScroll: true }); };
+    const onKeydown = event => { if (event.key === 'Escape') close(); };
+    closeButton.addEventListener('click', close);
+    backButton.addEventListener('click', close);
+    overlay.addEventListener('mousedown', event => { if (event.target === overlay) close(); });
+    document.addEventListener('keydown', onKeydown);
+    closeButton.focus();
+  }
+
+  function installCapabilityDialogs() {
     const section = document.querySelector('.capabilities');
     if (!section) return;
     section.id = 'capabilities';
     [...section.querySelectorAll('.capability-card')].forEach((card, index) => {
-      if (card.tagName === 'A') return;
-      const link = document.createElement('a');
-      [...card.attributes].forEach(attribute => link.setAttribute(attribute.name, attribute.value));
-      link.href = `./capabilities/${capabilityPages[index]}.html`;
-      link.setAttribute('aria-label', `查看${card.querySelector('h3')?.textContent || ''}详情`);
-      link.innerHTML = card.innerHTML;
+      if (card.dataset.dialogReady === 'true' || !capabilityDetails[index]) return;
+      card.dataset.dialogReady = 'true';
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', `查看${capabilityDetails[index].title}介绍`);
       const action = document.createElement('b');
       action.className = 'capability-action';
-      action.textContent = '查看能力详情 ↗︎';
-      link.appendChild(action);
-      card.replaceWith(link);
+      action.textContent = '点击查看详情 ↗︎';
+      card.appendChild(action);
+      card.addEventListener('click', () => openCapabilityDialog(card, capabilityDetails[index], index));
+      card.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openCapabilityDialog(card, capabilityDetails[index], index); }
+      });
     });
   }
 
@@ -164,7 +196,7 @@
     enhanceHero();
     addHighlights();
     updatePlatformCopy();
-    linkCapabilityCards();
+    installCapabilityDialogs();
     prioritizeEnergySystem();
     ensureSectionIds();
     reorderStory();

@@ -1,4 +1,4 @@
-/* Word taskbook enhancements: identity, narrative order, capability pages and mobile navigation. */
+/* Word taskbook enhancements: identity, narrative order and mobile navigation. */
 .topbar {
   width: min(1280px, calc(100% - 36px));
 }
@@ -105,35 +105,23 @@
   max-width: 800px;
 }
 
-.capability-card {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-.capability-card:focus-visible {
-  outline: 3px solid var(--aqua);
-  outline-offset: -5px;
-}
-
-.capability-action {
-  position: absolute;
-  left: 30px;
-  bottom: 24px;
-  color: var(--teal);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .25s, transform .25s;
-}
-
+.capability-card[data-dialog-ready="true"] { cursor: pointer; }
+.capability-card[data-dialog-ready="true"]:focus-visible { outline: 3px solid var(--aqua); outline-offset: -5px; }
+.capability-action { position: absolute; left: 30px; bottom: 24px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: .06em; opacity: 0; transform: translateY(6px); transition: opacity .25s, transform .25s; }
 .capability-card:hover .capability-action,
-.capability-card:focus-visible .capability-action {
-  opacity: 1;
-  transform: none;
-}
+.capability-card:focus-visible .capability-action { opacity: 1; transform: none; }
+
+.capability-dialog-panel { grid-template-columns: .8fr 1.2fr; width: min(980px, 100%); }
+.capability-dialog-visual { isolation: isolate; min-height: 560px; color: #fff; background: radial-gradient(circle at 50% 45%, rgba(117,222,213,.28), transparent 35%), linear-gradient(145deg, #052f47, #057d7c); align-content: center; justify-items: center; gap: 14px; display: grid; position: relative; overflow: hidden; }
+.capability-dialog-visual span { color: var(--aqua); letter-spacing: .16em; font-size: 18px; font-weight: 800; }
+.capability-dialog-visual strong { max-width: 80%; text-align: center; letter-spacing: -.04em; font-size: clamp(40px, 5vw, 66px); line-height: 1.05; }
+.capability-dialog-visual i { z-index: -1; border: 1px solid rgba(117,222,213,.3); border-radius: 50%; position: absolute; inset: 16%; }
+.capability-dialog-visual i:nth-of-type(2) { inset: 28%; border-style: dashed; }
+.capability-dialog-visual i:nth-of-type(3) { inset: 40%; background: rgba(117,222,213,.08); }
+.capability-dialog-copy ul { border-top: 1px solid var(--line); margin: 22px 0 0; padding: 16px 0 0; display: grid; gap: 10px; }
+.capability-dialog-copy li { color: var(--ink-2); font-size: 13px; line-height: 1.65; }
+.capability-dialog-copy li::before { content: ''; background: var(--teal-bright); border-radius: 50%; width: 6px; height: 6px; margin-right: 10px; display: inline-block; }
+.capability-dialog-copy aside { color: var(--muted); background: var(--sky); border-radius: 12px; margin-top: 18px; padding: 13px 15px; font-size: 11px; line-height: 1.7; }
 
 @media (max-width: 1100px) {
   .topbar nav { gap: 12px; }
@@ -290,8 +278,14 @@
     line-height: 1.08;
   }
 
-  .capability-action {
-    opacity: 1;
-    transform: none;
-  }
+  .capability-action { opacity: 1; transform: none; }
+  .capability-dialog-panel { grid-template-columns: 1fr; }
+  .capability-dialog-visual { min-height: 230px; }
+
+}
+
+@media (max-width: 680px) {
+  .capability-dialog-visual { min-height: 190px; }
+  .capability-dialog-visual strong { font-size: 38px; }
+  .capability-dialog-copy { padding-top: 24px; }
 }
