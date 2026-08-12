@@ -69,7 +69,8 @@
   function installSystems() {
     const tabs = document.querySelector('.system-tabs');
     const panel = document.querySelector('.system-active');
-    if (!tabs || !panel) return;
+    if (!tabs || !panel || tabs.dataset.systemControl === 'true') return;
+    tabs.dataset.systemControl = 'true';
     const buttons = [...tabs.querySelectorAll('button')];
     const buttonById = new Map(buttons.map(button => {
       const file = filename(button.querySelector('img')?.src || '');
@@ -237,9 +238,13 @@
     installLightboxes();
   }
 
+  const scheduleInstall = () => {
+    window.setTimeout(install, 650);
+    window.setTimeout(install, 1750);
+  };
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', install, { once: true });
+    document.addEventListener('DOMContentLoaded', scheduleInstall, { once: true });
   } else {
-    install();
+    scheduleInstall();
   }
 })();
