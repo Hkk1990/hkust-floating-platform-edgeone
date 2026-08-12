@@ -457,6 +457,8 @@
   .mobility-stage[data-manual-ready="true"] {
     aspect-ratio: 1.78 !important;
     overflow: visible;
+    margin-top: 148px !important;
+    margin-bottom: 54px !important;
   }
 
   .mobility-stage[data-manual-ready="true"] > img,
@@ -466,7 +468,8 @@
 
   .mobility-stage[data-manual-ready="true"] .mobility-hud {
     gap: 9px;
-    top: -42px !important;
+    top: auto !important;
+    bottom: calc(100% + 12px) !important;
     left: 8px !important;
     right: 8px !important;
   }
@@ -498,8 +501,18 @@
   }
 
   .mobility-stage[data-manual-ready="true"] .detach-note {
-    top: 83% !important;
-    left: 37% !important;
+    top: auto !important;
+    right: 0 !important;
+    bottom: -46px !important;
+    left: auto !important;
+    white-space: nowrap;
+  }
+
+  .mobility-stage[data-manual-ready="true"] .moving-complex b,
+  .mobility-stage[data-manual-ready="true"] .bridge-unit::after,
+  .mobility-stage[data-manual-ready="true"] .anchor-point::after,
+  .mobility-stage[data-manual-ready="true"] .position-origin {
+    display: none !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .moving-complex,
@@ -540,14 +553,10 @@
     left: 23% !important;
   }
 
-  .mobility-stage[data-manual-ready="true"] .position-origin {
-    top: 34% !important;
-    left: 56% !important;
-  }
-
   .mobility-stage[data-manual-ready="true"] .position-target {
-    top: 79% !important;
-    left: 7% !important;
+    top: auto !important;
+    bottom: -46px !important;
+    left: 0 !important;
   }
 
   .mobility-stage[data-manual-ready="true"] .anchor-point {
