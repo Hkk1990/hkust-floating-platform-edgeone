@@ -193,6 +193,47 @@
     document.querySelector('.interiors')?.setAttribute('id', 'interiors');
   }
 
+  function addProjectCredits() {
+    const shell = document.querySelector('.site-shell');
+    const footer = shell?.querySelector(':scope > footer');
+    if (!shell || !footer || shell.querySelector(':scope > .project-credits')) return;
+
+    const section = document.createElement('section');
+    section.className = 'project-credits';
+    section.setAttribute('aria-label', '\u9879\u76ee\u53c2\u5efa\u5355\u4f4d');
+    section.innerHTML = `
+      <div class="project-credit-list">
+        <article class="project-credit-item">
+          <span class="project-credit-logo project-credit-logo-hkust" aria-hidden="true">
+            <img src="./media/partner-hkust.png" alt=""/>
+          </span>
+          <div class="project-credit-copy">
+            <p><strong>\u9879\u76ee\u4e1a\u4e3b</strong><span>PROJECT CLIENT</span></p>
+            <h2>\u9999\u6e2f\u79d1\u6280\u5927\u5b66\uff08\u5e7f\u5dde\uff09</h2>
+          </div>
+        </article>
+        <article class="project-credit-item">
+          <span class="project-credit-logo project-credit-logo-epc" aria-hidden="true">
+            <img src="./media/partner-fhd.png" alt=""/>
+          </span>
+          <div class="project-credit-copy">
+            <p><strong>\u5de5\u7a0b\u603b\u627f\u5305</strong><span>EPC CONTRACTOR</span></p>
+            <h2>\u4e2d\u4ea4\u7b2c\u56db\u822a\u52a1\u5de5\u7a0b\u52d8\u5bdf\u8bbe\u8ba1\u9662\u6709\u9650\u516c\u53f8</h2>
+          </div>
+        </article>
+        <article class="project-credit-item">
+          <span class="project-credit-logo project-credit-logo-construction" aria-hidden="true">
+            <img src="./media/partner-crec.png" alt=""/>
+          </span>
+          <div class="project-credit-copy">
+            <p><strong>\u65bd\u5de5\u627f\u5efa</strong><span>CONSTRUCTION CONTRACTOR</span></p>
+            <h2>\u4e2d\u94c1\u5e7f\u5dde\u5de5\u7a0b\u5c40\u96c6\u56e2\u6709\u9650\u516c\u53f8</h2>
+          </div>
+        </article>
+      </div>`;
+    shell.insertBefore(section, footer);
+  }
+
   function install() {
     enhanceNavigation();
     enhanceHero();
@@ -202,6 +243,7 @@
     prioritizeEnergySystem();
     ensureSectionIds();
     reorderStory();
+    addProjectCredits();
   }
 
   // The exported page hydrates asynchronously. Apply enhancements after React
