@@ -311,12 +311,11 @@
   position: relative;
   z-index: 1;
   overflow: hidden;
-  padding: 46px max(5vw, 32px);
+  padding: 42px 32px;
   color: #ecffff;
   background:
-    radial-gradient(circle at 84% 18%, rgba(94, 218, 211, .13), transparent 28%),
-    linear-gradient(135deg, #062f43 0%, #07384a 55%, #064a50 100%);
-  border-top: 1px solid rgba(162, 232, 227, .17);
+    radial-gradient(circle at 84% 24%, rgba(104, 189, 190, .055), transparent 30%),
+    linear-gradient(180deg, #052a3a 0%, #042433 100%);
 }
 
 .project-credits::after {
@@ -326,9 +325,9 @@
   bottom: -170px;
   width: 420px;
   height: 420px;
-  border: 1px solid rgba(137, 229, 221, .11);
+  border: 1px solid rgba(137, 229, 221, .055);
   border-radius: 50%;
-  box-shadow: 0 0 0 62px rgba(137, 229, 221, .025), 0 0 0 126px rgba(137, 229, 221, .018);
+  box-shadow: 0 0 0 62px rgba(137, 229, 221, .012), 0 0 0 126px rgba(137, 229, 221, .008);
   pointer-events: none;
 }
 
@@ -353,7 +352,7 @@
 }
 
 .project-credit-item + .project-credit-item {
-  border-left: 1px solid rgba(213, 252, 248, .15);
+  border-left: 0;
 }
 
 .project-credit-logo {
@@ -370,32 +369,34 @@
 }
 
 .project-credit-logo img {
-  width: 78%;
-  height: 78%;
+  width: 72%;
+  height: 72%;
   object-fit: contain;
-  mix-blend-mode: screen;
-  filter: grayscale(1) contrast(2.35) brightness(1.2);
+  object-position: center;
+  mix-blend-mode: normal;
+  filter: none;
+  opacity: .82;
 }
 
 .project-credit-logo-hkust img {
-  width: 70%;
-  height: 104%;
-  filter: grayscale(1) contrast(2.7) brightness(1.35);
+  width: 72%;
+  height: 72%;
 }
 
 .project-credit-logo-epc img {
-  width: 87%;
-  height: 87%;
-  filter: grayscale(1) invert(1) contrast(2.5) brightness(1.25);
+  width: 72%;
+  height: 72%;
 }
 
 .project-credit-logo-construction img {
-  width: 86%;
-  height: 86%;
-  filter: grayscale(1) contrast(2.5) brightness(1.18);
+  width: 72%;
+  height: 72%;
 }
 
-.project-credit-copy { min-width: 0; }
+.project-credit-copy {
+  min-width: 0;
+  font-family: inherit;
+}
 
 .project-credit-copy p {
   display: flex;
@@ -403,7 +404,7 @@
   gap: 5px 9px;
   align-items: baseline;
   margin: 0 0 10px;
-  color: #7ce0d9;
+  color: rgba(255, 255, 255, .72);
   font-size: 11px;
   line-height: 1.25;
   letter-spacing: .08em;
@@ -411,12 +412,12 @@
 
 .project-credit-copy p strong {
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: .05em;
 }
 
 .project-credit-copy p span {
-  color: rgba(209, 244, 241, .58);
+  color: rgba(255, 255, 255, .46);
   font-size: 8px;
   letter-spacing: .14em;
   white-space: nowrap;
@@ -425,11 +426,23 @@
 .project-credit-copy h2 {
   max-width: 360px;
   margin: 0;
-  color: #f4ffff;
+  color: rgba(255, 255, 255, .8);
   font-size: clamp(14px, 1.05vw, 17px);
-  font-weight: 520;
+  font-weight: 500;
   line-height: 1.55;
   letter-spacing: .015em;
+}
+
+@media (min-width: 901px) {
+  .project-credit-list {
+    width: 100%;
+    max-width: none;
+    column-gap: clamp(18px, 2vw, 44px);
+  }
+
+  .project-credit-item {
+    padding: 24px clamp(14px, 1.6vw, 30px);
+  }
 }
 
 @media (max-width: 900px) {
