@@ -25,7 +25,7 @@ for (const entry of readdirSync(root, { withFileTypes: true })) {
   });
 }
 
-const assetVersion = "20260814-01";
+const assetVersion = "20260814-02";
 const extraHead = `<link rel="stylesheet" href="./mobility-control.css?v=${assetVersion}"/><link rel="stylesheet" href="./site-enhancements.css?v=${assetVersion}"/>`;
 const extraBody = `<script src="./mobility-control.js?v=${assetVersion}" defer></script><script src="./interaction-control.js?v=${assetVersion}" defer></script><script src="./site-enhancements.js?v=${assetVersion}" defer></script>`;
 const intervalGuard = '<script id="mobility-interval-guard">(()=>{const original=window.setInterval;window.setInterval=function(handler,delay,...args){if(delay===7600)return 0;return original.call(window,handler,delay,...args)}})()</script>';

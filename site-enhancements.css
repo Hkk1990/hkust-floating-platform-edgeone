@@ -369,28 +369,19 @@
 }
 
 .project-credit-logo img {
-  width: 72%;
-  height: 72%;
+    position: absolute;
+    left: 14%;
+    top: 14%;
+    width: 72% !important;
+    height: 72% !important;
+  max-width: none;
+  max-height: none;
+  display: block;
   object-fit: contain;
   object-position: center;
   mix-blend-mode: normal;
   filter: none;
   opacity: .82;
-}
-
-.project-credit-logo-hkust img {
-  width: 72%;
-  height: 72%;
-}
-
-.project-credit-logo-epc img {
-  width: 72%;
-  height: 72%;
-}
-
-.project-credit-logo-construction img {
-  width: 72%;
-  height: 72%;
 }
 
 .project-credit-copy {
