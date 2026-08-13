@@ -27,7 +27,7 @@
     toggle.setAttribute('aria-controls', nav.id);
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-label', '打开网站目录');
-    toggle.innerHTML = '<span></span><span></span><span></span><b>目录</b>';
+    toggle.innerHTML = '<span class="menu-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span><b>目录</b>';
     const status = topbar.querySelector('.topbar-status');
     topbar.insertBefore(toggle, status);
     const closeMenu = () => {
@@ -69,7 +69,7 @@
     highlights.className = 'project-highlights';
     highlights.id = 'highlights';
     highlights.innerHTML = `
-      <div class="highlight-heading" data-reveal="true">
+      <div class="highlight-heading highlight-heading-static">
         <p class="section-index">CORE HIGHLIGHTS</p>
         <h2>让真实水域成为<br/><em>科研验证现场</em></h2>
       </div>
