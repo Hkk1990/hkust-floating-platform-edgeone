@@ -50,6 +50,8 @@
     const heroContent = document.querySelector('.hero-content');
     const intro = heroContent?.querySelector('.hero-intro');
     if (!heroContent || !intro || heroContent.querySelector('.project-full-name')) return;
+    const projectName = heroContent.querySelector('.eyebrow span');
+    if (projectName) projectName.textContent = 'FLOATING PLATFORM';
     intro.textContent = '香港科技大学（广州）校园浮式多功能试验及环境可持续微平台';
     intro.classList.add('project-full-name');
     const positioning = document.createElement('p');

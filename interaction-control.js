@@ -67,12 +67,18 @@
   }
 
   function installSystems() {
-    const tabs = document.querySelector('.system-tabs');
+    let tabs = document.querySelector('.system-tabs');
     const panel = document.querySelector('.system-active');
     if (!tabs || !panel || tabs.dataset.systemControl === 'true') return;
+    // Replace the hydrated tab strip with a clean DOM copy. This prevents the
+    // original application click handler from opening a broken route while
+    // keeping the visible controls and accessibility semantics unchanged.
+    const cleanTabs = tabs.cloneNode(true);
+    tabs.replaceWith(cleanTabs);
+    tabs = cleanTabs;
     tabs.dataset.systemControl = 'true';
     const buttons = [...tabs.querySelectorAll('button')];
-    const buttonById = new Map(buttons.map(button => {
+    let buttonById = new Map(buttons.map(button => {
       const file = filename(button.querySelector('img')?.src || '');
       const system = systems.find(item => item.file === file);
       return [system?.id, button];
@@ -84,6 +90,7 @@
       button.dataset.systemId = system.id;
       button.querySelector('span').textContent = system.shortTitle;
       tabs.appendChild(button);
+      buttonById.set(system.id, button);
     });
 
     const screen = panel.querySelector('.console-screen img');
@@ -122,19 +129,28 @@
       }
     }
 
-    tabs.addEventListener('click', event => {
-      const button = event.target.closest('button[data-system-id]');
-      if (button) selectSystem(button.dataset.systemId);
+    const handleSystemClick = event => {
+      const button = event.currentTarget?.matches?.('button[data-system-id]')
+        ? event.currentTarget
+        : event.target.closest('button[data-system-id]');
+      if (!button) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      selectSystem(button.dataset.systemId);
+    };
+    buttonById.forEach(button => {
+      button.addEventListener('click', handleSystemClick, true);
     });
     tabs.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
       event.preventDefault();
+      event.stopImmediatePropagation();
       const ordered = systems.map(item => item.id);
       const current = ordered.indexOf(document.activeElement?.dataset.systemId);
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? ordered.length - 1 :
         (current + (event.key === 'ArrowRight' ? 1 : -1) + ordered.length) % ordered.length;
       selectSystem(ordered[next], true);
-    });
+    }, true);
     selectSystem('energy');
   }
 
