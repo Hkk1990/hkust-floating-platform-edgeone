@@ -115,9 +115,9 @@
 
 .capability-card[data-dialog-ready="true"] { cursor: pointer; }
 .capability-card[data-dialog-ready="true"]:focus-visible { outline: 3px solid var(--aqua); outline-offset: -5px; }
-.capability-action { position: absolute; left: 30px; bottom: 24px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: .06em; opacity: 0; transform: translateY(6px); transition: opacity .25s, transform .25s; }
+.capability-action { position: absolute; left: 30px; bottom: 24px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: .06em; opacity: 1; transform: none; transition: color .25s, transform .25s; }
 .capability-card:hover .capability-action,
-.capability-card:focus-visible .capability-action { opacity: 1; transform: none; }
+.capability-card:focus-visible .capability-action { color: var(--ink); transform: translateX(3px); }
 
 .capability-dialog-panel { grid-template-columns: .8fr 1.2fr; width: min(980px, 100%); }
 .capability-dialog-visual { isolation: isolate; min-height: 560px; color: #fff; background: radial-gradient(circle at 50% 45%, rgba(117,222,213,.28), transparent 35%), linear-gradient(145deg, #052f47, #057d7c); align-content: center; justify-items: center; gap: 14px; display: grid; position: relative; overflow: hidden; }
