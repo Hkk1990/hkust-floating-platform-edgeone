@@ -205,7 +205,7 @@
       <div class="project-credit-list">
         <article class="project-credit-item">
           <span class="project-credit-logo project-credit-logo-hkust" aria-hidden="true">
-            <img src="./media/partner-hkust.png" alt=""/>
+            <img src="./media/partner-hkust.png?v=20260814-03" alt=""/>
           </span>
           <div class="project-credit-copy">
             <p><strong>\u9879\u76ee\u4e1a\u4e3b</strong><span>PROJECT CLIENT</span></p>
@@ -214,7 +214,7 @@
         </article>
         <article class="project-credit-item">
           <span class="project-credit-logo project-credit-logo-epc" aria-hidden="true">
-            <img src="./media/partner-fhd.png" alt=""/>
+            <img src="./media/partner-fhd.png?v=20260814-03" alt=""/>
           </span>
           <div class="project-credit-copy">
             <p><strong>\u5de5\u7a0b\u603b\u627f\u5305</strong><span>EPC CONTRACTOR</span></p>
@@ -223,7 +223,7 @@
         </article>
         <article class="project-credit-item">
           <span class="project-credit-logo project-credit-logo-construction" aria-hidden="true">
-            <img src="./media/partner-crec.png" alt=""/>
+            <img src="./media/partner-crec.png?v=20260814-03" alt=""/>
           </span>
           <div class="project-credit-copy">
             <p><strong>\u65bd\u5de5\u627f\u5efa</strong><span>CONSTRUCTION CONTRACTOR</span></p>
