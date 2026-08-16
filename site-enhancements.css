@@ -460,3 +460,43 @@
     line-height: 1.48;
   }
 }
+
+/* Original approved floating-platform line mark. Only replaces the two FP badges. */
+.brand .brand-mark,
+.footer-brand .brand-mark {
+  display: block;
+  flex: 0 0 auto;
+  width: 64px;
+  height: 52px;
+  min-width: 64px;
+  border: 0;
+  border-radius: 0;
+  background: transparent url("./media/floating-platform-mark-reference.png") center / contain no-repeat !important;
+  box-shadow: none;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.footer-brand .brand-mark {
+  width: 68px;
+  height: 56px;
+  min-width: 68px;
+}
+
+@media (max-width: 680px) {
+  .topbar .brand-mark {
+    width: 52px;
+    height: 44px;
+    min-width: 52px;
+    border-radius: 0;
+  }
+
+  .footer-brand .brand-mark {
+    width: 58px;
+    height: 48px;
+    min-width: 58px;
+    border-radius: 0;
+  }
+}
