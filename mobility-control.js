@@ -1,0 +1,268 @@
+(() => {
+  const MOBILE_QUERY = '(max-width: 680px)';
+  const TEXT_ARROW = '\u2197\uFE0E';
+  let activeStage = null;
+  let activeRender = null;
+
+  function normalizePromptArrows(root = document) {
+    root.querySelectorAll('.media-hint, .photo-caption strong, .exchange-grid small').forEach(element => {
+      const text = element.textContent;
+      if (text && text.includes('\u2197')) {
+        element.textContent = text.replace(/\u2197\uFE0F?/g, TEXT_ARROW);
+      }
+    });
+  }
+
+  function installNavigation() {
+    const nav = document.querySelector('.topbar nav');
+    const interiors = document.querySelector('.interiors');
+    if (!nav || !interiors) return;
+    interiors.id = 'interiors';
+    if (!nav.querySelector('a[href="#interiors"]')) {
+      const link = document.createElement('a');
+      link.href = '#interiors';
+      link.textContent = '空间体验';
+      nav.appendChild(link);
+    }
+  }
+
+  function installManualControl() {
+    const stage = document.querySelector('.mobility-stage');
+    if (!stage) return false;
+    if (stage.dataset.manualReady === 'true' && stage.querySelector('.mobility-slider')) {
+      if (activeStage === stage && activeRender) activeRender();
+      return true;
+    }
+    if (stage.dataset.manualReady === 'true') delete stage.dataset.manualReady;
+
+    const switchHost = stage.querySelector('.mode-switch');
+    const status = stage.querySelector('.hud-status strong');
+    const readout = stage.querySelector('.hud-readout strong');
+    const model = stage.querySelector('.moving-complex');
+    const bridge = stage.querySelector('.bridge-unit');
+    const anchorPoints = {
+      left: stage.querySelector('.anchor-left'),
+      right: stage.querySelector('.anchor-right'),
+      bottom: stage.querySelector('.anchor-bottom')
+    };
+    const chains = {
+      left: stage.querySelector('.chain-left'),
+      right: stage.querySelector('.chain-right'),
+      bottom: stage.querySelector('.chain-bottom')
+    };
+    if (!switchHost || !model) return false;
+
+    stage.dataset.manualReady = 'true';
+    stage.classList.remove('is-flood');
+    switchHost.setAttribute('aria-label', '手动拖动浮体位置');
+
+    const control = document.createElement('div');
+    control.className = 'mobility-slider-wrap';
+    control.innerHTML = [
+      '<span>常态泊位</span>',
+      '<input class="mobility-slider" type="range" min="0" max="100" value="0" step="1" aria-label="拖动整个浮体至行洪临时锚位">',
+      '<strong aria-hidden="true">0%</strong>',
+      '<button class="mobility-auto-button" type="button">点击拖动浮体</button>'
+    ].join('');
+    switchHost.appendChild(control);
+
+    const slider = control.querySelector('.mobility-slider');
+    const valueLabel = control.querySelector('strong');
+    const autoButton = control.querySelector('.mobility-auto-button');
+    const mobileMedia = window.matchMedia(MOBILE_QUERY);
+    let pendingValue = 0;
+    let frame = 0;
+    let autoFrame = 0;
+
+    function setText(element, text) {
+      if (element && element.textContent !== text) element.textContent = text;
+    }
+
+    function connectChain(element, anchor, targetX, targetY, stageRect) {
+      if (!element || !anchor) return;
+      const anchorRect = anchor.getBoundingClientRect();
+      const originX = anchorRect.left + anchorRect.width / 2 - stageRect.left;
+      const originY = anchorRect.top + anchorRect.height / 2 - stageRect.top;
+      const deltaX = targetX - originX;
+      const deltaY = targetY - originY;
+      element.style.left = `${originX.toFixed(2)}px`;
+      element.style.top = `${originY.toFixed(2)}px`;
+      element.style.width = `${Math.hypot(deltaX, deltaY).toFixed(2)}px`;
+      element.style.transform = `rotate(${(Math.atan2(deltaY, deltaX) * 180 / Math.PI).toFixed(2)}deg)`;
+    }
+
+    function rotateOffset(centerX, centerY, offsetX, offsetY, degrees) {
+      const angle = degrees * Math.PI / 180;
+      return {
+        x: centerX + offsetX * Math.cos(angle) - offsetY * Math.sin(angle),
+        y: centerY + offsetX * Math.sin(angle) + offsetY * Math.cos(angle)
+      };
+    }
+
+    function render(rawValue) {
+      const value = Math.max(0, Math.min(100, Number(rawValue) || 0));
+      const progress = value / 100;
+      const stageRect = stage.getBoundingClientRect();
+      const stageWidth = stage.clientWidth;
+      const stageHeight = stage.clientHeight;
+      const modelSize = stageWidth * 0.26;
+      const centerX = stageWidth * 0.50 - stageWidth * 0.27 * progress;
+      const centerY = stageHeight * 0.44 + stageWidth * 0.169 * progress;
+      const floatAngle = 5;
+      stage.classList.remove('is-flood');
+
+      // Both layouts now use the complete landscape diagram and identical coordinates.
+      const deltaX = -27 * progress;
+      const deltaY = 16.9 * progress;
+      stage.style.setProperty('--move-x', `${deltaX.toFixed(3)}cqw`);
+      stage.style.setProperty('--move-y', `${deltaY.toFixed(3)}cqw`);
+      stage.style.setProperty('--float-angle', `${floatAngle}deg`);
+      stage.style.setProperty('--ghost-opacity', '0');
+      stage.style.setProperty('--detach-opacity', String(Math.max(0, (progress - 0.55) / 0.45).toFixed(3)));
+      slider.style.setProperty('--slider-fill', `${value}%`);
+      slider.setAttribute('aria-valuetext', value === 0 ? '常态泊位' : value === 100 ? '行洪临时锚位' : `已移动百分之${value}`);
+      setText(valueLabel, `${value}%`);
+
+      // The transparent source has padding around the rendered body. Target the
+      // visible octagon perimeter rather than the image box so every chain meets it.
+      const leftJoint = rotateOffset(centerX, centerY, -modelSize * 0.345, -modelSize * 0.12, floatAngle);
+      const rightJoint = rotateOffset(centerX, centerY, modelSize * 0.365, -modelSize * 0.13, floatAngle);
+      const bottomJoint = rotateOffset(centerX, centerY, -modelSize * 0.08, modelSize * 0.405, floatAngle);
+      connectChain(chains.left, anchorPoints.left, leftJoint.x, leftJoint.y, stageRect);
+      connectChain(chains.right, anchorPoints.right, rightJoint.x, rightJoint.y, stageRect);
+      connectChain(chains.bottom, anchorPoints.bottom, bottomJoint.x, bottomJoint.y, stageRect);
+
+      if (bridge) {
+        const pivotX = stageWidth * 0.59;
+        const pivotY = stageHeight * 0.975;
+        // Meet the float perimeter itself. The complete entrance neck belongs to
+        // the bridge, so separation starts exactly at the floating body's edge.
+        const entranceJoint = rotateOffset(stageWidth * 0.50, stageHeight * 0.44, modelSize * 0.14, modelSize * 0.39, floatAngle);
+        const jointX = entranceJoint.x;
+        const jointY = entranceJoint.y;
+        const bridgeDeltaX = jointX - pivotX;
+        const bridgeDeltaY = jointY - pivotY;
+        const bridgeLength = Math.hypot(bridgeDeltaX, bridgeDeltaY);
+        const connectedAngle = Math.atan2(bridgeDeltaX, -bridgeDeltaY) * 180 / Math.PI;
+        const bridgeProgress = 1 - Math.pow(1 - progress, 2.4);
+        // The released bridge rests along the bank. Its free end stops just above
+        // the A3 ground anchor instead of rotating past the concrete block.
+        const restingX = stageWidth * 0.42;
+        const restingY = stageHeight * 0.89;
+        const restingDeltaX = restingX - pivotX;
+        const restingDeltaY = restingY - pivotY;
+        const restingLength = Math.hypot(restingDeltaX, restingDeltaY);
+        const restingAngle = Math.atan2(restingDeltaX, -restingDeltaY) * 180 / Math.PI;
+        const renderedLength = bridgeLength + (restingLength - bridgeLength) * bridgeProgress;
+        const bridgeAngle = connectedAngle + (restingAngle - connectedAngle) * bridgeProgress;
+        bridge.style.setProperty('height', `${renderedLength.toFixed(2)}px`, 'important');
+        stage.style.setProperty('--bridge-angle', `${bridgeAngle.toFixed(2)}deg`);
+      }
+
+      if (value === 0) {
+        setText(status, '常态运营');
+        setText(readout, '引桥连接 · 稳定系泊');
+      } else if (value === 100) {
+        setText(status, '行洪避让');
+        setText(readout, '临时锚位 · 3条锚链受力');
+      } else {
+        setText(status, '人工拖移中');
+        setText(readout, `整体浮体移动 ${value}%`);
+      }
+    }
+
+    function scheduleRender(value) {
+      pendingValue = value;
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        render(pendingValue);
+      });
+    }
+
+    function stopAuto() {
+      if (autoFrame) window.cancelAnimationFrame(autoFrame);
+      autoFrame = 0;
+      autoButton.disabled = false;
+      autoButton.textContent = '点击拖动浮体';
+    }
+
+    function startAuto() {
+      stopAuto();
+      slider.value = '0';
+      render(0);
+      autoButton.disabled = true;
+      autoButton.textContent = '浮体拖动中…';
+      const startedAt = performance.now();
+      let lastPaint = 0;
+
+      function advance(now) {
+        const elapsed = Math.min(5000, now - startedAt);
+        if (elapsed === 5000 || now - lastPaint >= 32) {
+          const linear = elapsed / 5000;
+          const eased = linear * linear * (3 - 2 * linear);
+          const value = Math.round(eased * 100);
+          slider.value = String(value);
+          render(value);
+          lastPaint = now;
+        }
+        if (elapsed < 5000) autoFrame = window.requestAnimationFrame(advance);
+        else stopAuto();
+      }
+
+      autoFrame = window.requestAnimationFrame(advance);
+    }
+
+    slider.addEventListener('input', event => {
+      stopAuto();
+      scheduleRender(event.currentTarget.value);
+    }, { passive: true });
+    slider.addEventListener('change', event => {
+      stopAuto();
+      render(event.currentTarget.value);
+    });
+    autoButton.addEventListener('click', startAuto);
+    mobileMedia.addEventListener?.('change', () => render(slider.value));
+    activeStage = stage;
+    activeRender = () => render(slider.value);
+    render(0);
+    return true;
+  }
+
+  function boot(attempt = 0) {
+    if (installManualControl()) return;
+    if (attempt < 40) window.setTimeout(() => boot(attempt + 1), 100);
+  }
+
+  function start() {
+    installNavigation();
+    normalizePromptArrows();
+    document.querySelectorAll('[data-reveal]').forEach(element => {
+      element.classList.add('is-visible');
+    });
+
+    window.setTimeout(boot, 650);
+    window.addEventListener('load', () => window.setTimeout(boot, 150), { once: true });
+
+    // React may finish hydration after this script. Reinstall once if that render replaces the control.
+    let recoveryTimer = 0;
+    const observer = new MutationObserver(() => {
+      window.clearTimeout(recoveryTimer);
+      recoveryTimer = window.setTimeout(() => {
+        installNavigation();
+        normalizePromptArrows();
+        const stage = document.querySelector('.mobility-stage');
+        if (!stage) return;
+        if (!stage.querySelector('.mobility-slider')) installManualControl();
+        else if (activeStage === stage && activeRender) activeRender();
+      }, 80);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
+})();

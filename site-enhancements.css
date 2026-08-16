@@ -1,0 +1,502 @@
+/* Word taskbook enhancements: identity, narrative order and mobile navigation. */
+.topbar {
+  width: min(1280px, calc(100% - 36px));
+}
+
+.topbar nav {
+  gap: clamp(14px, 1.6vw, 25px);
+}
+
+.topbar nav a {
+  white-space: nowrap;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.project-full-name {
+  max-width: 780px;
+  margin-bottom: 10px !important;
+  color: #fff !important;
+  font-size: clamp(16px, 1.5vw, 21px) !important;
+  font-weight: 600;
+  line-height: 1.65 !important;
+}
+
+.hero-positioning {
+  max-width: 720px;
+  margin: 0 0 28px;
+  color: rgba(255, 255, 255, .7);
+  font-size: 13px;
+  letter-spacing: .04em;
+}
+
+.project-highlights {
+  position: relative;
+  padding: 90px max(4vw, 28px) 140px;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(25,187,177,.13), transparent 28%),
+    linear-gradient(180deg, var(--paper), #edf7f6);
+}
+
+.highlight-heading,
+.highlight-grid {
+  width: min(1300px, 100%);
+  margin-inline: auto;
+}
+
+.highlight-heading {
+  display: grid;
+  grid-template-columns: .7fr 1.3fr;
+  align-items: end;
+  gap: 60px;
+  margin-bottom: 48px;
+}
+
+/* This block is injected after hydration, so it must not depend on the page's
+   one-shot reveal observer. Keep it visible on every viewport and refresh. */
+.highlight-heading-static {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+.highlight-heading h2 {
+  margin: 0;
+  font-size: clamp(42px, 5vw, 74px);
+  font-weight: 620;
+  letter-spacing: -.055em;
+  line-height: 1.03;
+}
+
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.highlight-grid article {
+  min-height: 220px;
+  padding: 24px;
+  border: 1px solid rgba(8,47,73,.12);
+  border-radius: 24px;
+  background: rgba(255,255,255,.68);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 16px 50px rgba(8,47,73,.07);
+}
+
+.highlight-grid article span {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .18em;
+}
+
+.highlight-grid article strong {
+  display: block;
+  min-height: 2.8em;
+  margin: 64px 0 12px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.highlight-grid article p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.platform-copy h2 em {
+  display: block;
+  max-width: 800px;
+}
+
+.capability-card[data-dialog-ready="true"] { cursor: pointer; }
+.capability-card[data-dialog-ready="true"]:focus-visible { outline: 3px solid var(--aqua); outline-offset: -5px; }
+.capability-action { position: absolute; left: 30px; bottom: 24px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: .06em; opacity: 1; transform: none; transition: color .25s, transform .25s; }
+.capability-card:hover .capability-action,
+.capability-card:focus-visible .capability-action { color: var(--ink); transform: translateX(3px); }
+
+.capability-dialog-panel { grid-template-columns: .8fr 1.2fr; width: min(980px, 100%); }
+.capability-dialog-visual { isolation: isolate; min-height: 560px; color: #fff; background: radial-gradient(circle at 50% 45%, rgba(117,222,213,.28), transparent 35%), linear-gradient(145deg, #052f47, #057d7c); align-content: center; justify-items: center; gap: 14px; display: grid; position: relative; overflow: hidden; }
+.capability-dialog-visual span { color: var(--aqua); letter-spacing: .16em; font-size: 18px; font-weight: 800; }
+.capability-dialog-visual strong { max-width: 80%; text-align: center; letter-spacing: -.04em; font-size: clamp(40px, 5vw, 66px); line-height: 1.05; }
+.capability-dialog-visual i { z-index: -1; border: 1px solid rgba(117,222,213,.3); border-radius: 50%; width: min(72%, 410px); aspect-ratio: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.capability-dialog-visual i:nth-of-type(2) { width: min(50%, 285px); border-style: dashed; }
+.capability-dialog-visual i:nth-of-type(3) { width: min(28%, 160px); background: rgba(117,222,213,.08); }
+.capability-dialog-copy ul { border-top: 1px solid var(--line); margin: 22px 0 0; padding: 16px 0 0; display: grid; gap: 10px; }
+.capability-dialog-copy li { color: var(--ink-2); font-size: 13px; line-height: 1.65; }
+.capability-dialog-copy li::before { content: ''; background: var(--teal-bright); border-radius: 50%; width: 6px; height: 6px; margin-right: 10px; display: inline-block; }
+.capability-dialog-copy aside { color: var(--muted); background: var(--sky); border-radius: 12px; margin-top: 18px; padding: 13px 15px; font-size: 11px; line-height: 1.7; }
+
+@media (max-width: 1100px) {
+  .topbar nav { gap: 12px; }
+  .topbar nav a { font-size: 11px; }
+  .highlight-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 680px) {
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 7px;
+    min-height: 54px;
+    top: 5px;
+    padding: 7px 9px;
+    border-radius: 16px;
+    overflow: visible;
+  }
+
+  .topbar .brand {
+    min-width: 0;
+    gap: 7px;
+  }
+
+  .topbar .brand-mark {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+  }
+
+  .topbar .brand-copy {
+    display: grid;
+    min-width: 0;
+  }
+
+  .topbar .brand-copy strong {
+    overflow: hidden;
+    font-size: 8px;
+    letter-spacing: .08em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar .brand-copy small {
+    overflow: hidden;
+    font-size: 5.5px;
+    letter-spacing: .08em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar-status {
+    gap: 5px;
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 58px;
+    min-height: 34px;
+    padding: 7px 8px;
+    color: rgba(255,255,255,.84);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px;
+    background: rgba(255,255,255,.05);
+    cursor: pointer;
+  }
+
+  .menu-toggle-icon {
+    flex: 0 0 14px;
+    display: grid;
+    gap: 3px;
+  }
+
+  .menu-toggle-icon i {
+    display: block;
+    width: 14px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .menu-toggle b {
+    display: block;
+    line-height: 1;
+    font-size: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+    writing-mode: horizontal-tb;
+  }
+
+  header.topbar[data-enhanced="true"] nav#site-navigation {
+    display: none !important;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    padding-top: 4px;
+  }
+
+  header.topbar[data-enhanced="true"].menu-open nav#site-navigation {
+    display: grid !important;
+  }
+
+  .topbar nav a {
+    padding: 8px 4px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 9px;
+    background: rgba(255,255,255,.04);
+    font-size: 9px;
+    text-align: center;
+  }
+
+  .hero {
+    min-height: 870px;
+    padding-top: 112px;
+  }
+
+  .project-full-name {
+    margin-bottom: 8px !important;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+  }
+
+  .hero-positioning {
+    margin-bottom: 22px;
+    font-size: 10px;
+    line-height: 1.65;
+  }
+
+  .project-highlights {
+    padding: 90px 18px 100px;
+  }
+
+  .highlight-heading {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 34px;
+  }
+
+  .highlight-heading h2 {
+    font-size: clamp(38px, 11vw, 52px);
+  }
+
+  .highlight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .highlight-grid article {
+    min-height: 180px;
+  }
+
+  .highlight-grid article strong {
+    margin-top: 42px;
+  }
+
+  .platform-copy h2 em {
+    font-size: .88em;
+    line-height: 1.08;
+  }
+
+  .capability-action { opacity: 1; transform: none; }
+  .capability-card p { max-width: none; font-size: 10.5px; line-height: 1.4; white-space: nowrap; }
+  .capability-dialog-panel { grid-template-columns: 1fr; }
+  .capability-dialog-visual { min-height: 230px; }
+
+}
+
+@media (max-width: 680px) {
+  .capability-dialog-visual { min-height: 190px; }
+  .capability-dialog-visual strong { font-size: 38px; }
+  .capability-dialog-copy { padding-top: 24px; }
+}
+
+/* Formal project credits: intentionally understated and separate from content. */
+.project-credits {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  padding: 42px 32px;
+  color: #ecffff;
+  background:
+    radial-gradient(circle at 84% 24%, rgba(104, 189, 190, .055), transparent 30%),
+    linear-gradient(180deg, #052a3a 0%, #042433 100%);
+}
+
+.project-credits::after {
+  content: "";
+  position: absolute;
+  right: -90px;
+  bottom: -170px;
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(137, 229, 221, .055);
+  border-radius: 50%;
+  box-shadow: 0 0 0 62px rgba(137, 229, 221, .012), 0 0 0 126px rgba(137, 229, 221, .008);
+  pointer-events: none;
+}
+
+.project-credit-list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: .88fr 1.18fr 1.08fr;
+  max-width: 1480px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(213, 252, 248, .19);
+  border-bottom: 1px solid rgba(213, 252, 248, .19);
+}
+
+.project-credit-item {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  min-height: 128px;
+  padding: 25px 28px;
+}
+
+.project-credit-item + .project-credit-item {
+  border-left: 0;
+}
+
+.project-credit-logo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border: 1px solid rgba(209, 255, 250, .2);
+  border-radius: 17px;
+  background: rgba(216, 255, 251, .075);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.project-credit-logo img {
+    position: absolute;
+    left: 14%;
+    top: 14%;
+    width: 72% !important;
+    height: 72% !important;
+  max-width: none;
+  max-height: none;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  mix-blend-mode: normal;
+  filter: none;
+  opacity: .82;
+}
+
+.project-credit-copy {
+  min-width: 0;
+  font-family: inherit;
+}
+
+.project-credit-copy p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 9px;
+  align-items: baseline;
+  margin: 0 0 10px;
+  color: rgba(255, 255, 255, .72);
+  font-size: 11px;
+  line-height: 1.25;
+  letter-spacing: .08em;
+}
+
+.project-credit-copy p strong {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .05em;
+}
+
+.project-credit-copy p span {
+  color: rgba(255, 255, 255, .46);
+  font-size: 8px;
+  letter-spacing: .14em;
+  white-space: nowrap;
+}
+
+.project-credit-copy h2 {
+  max-width: 360px;
+  margin: 0;
+  color: rgba(255, 255, 255, .8);
+  font-size: clamp(14px, 1.05vw, 17px);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: .015em;
+}
+
+@media (min-width: 901px) {
+  .project-credit-list {
+    width: 100%;
+    max-width: none;
+    column-gap: clamp(18px, 2vw, 44px);
+  }
+
+  .project-credit-item {
+    padding: 24px clamp(14px, 1.6vw, 30px);
+  }
+}
+
+@media (max-width: 900px) {
+  .project-credits { padding: 34px 18px; }
+  .project-credit-list { grid-template-columns: 1fr; }
+  .project-credit-item {
+    grid-template-columns: 50px minmax(0, 1fr);
+    min-height: 94px;
+    padding: 18px 10px;
+  }
+  .project-credit-item + .project-credit-item {
+    border-top: 1px solid rgba(213, 252, 248, .15);
+    border-left: 0;
+  }
+  .project-credit-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+  }
+  .project-credit-copy p { margin-bottom: 6px; }
+  .project-credit-copy h2 {
+    max-width: none;
+    font-size: 13px;
+    line-height: 1.48;
+  }
+}
+
+/* Original approved floating-platform line mark. Only replaces the two FP badges. */
+.brand .brand-mark,
+.footer-brand .brand-mark {
+  display: block;
+  flex: 0 0 auto;
+  width: 64px;
+  height: 52px;
+  min-width: 64px;
+  border: 0;
+  border-radius: 0;
+  background: transparent url("./media/floating-platform-mark-reference.png") center / contain no-repeat !important;
+  box-shadow: none;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.footer-brand .brand-mark {
+  width: 68px;
+  height: 56px;
+  min-width: 68px;
+}
+
+@media (max-width: 680px) {
+  .topbar .brand-mark {
+    width: 52px;
+    height: 44px;
+    min-width: 52px;
+    border-radius: 0;
+  }
+
+  .footer-brand .brand-mark {
+    width: 58px;
+    height: 48px;
+    min-width: 58px;
+    border-radius: 0;
+  }
+}
